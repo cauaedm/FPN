@@ -38,6 +38,8 @@ jobs:
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Build site
         # base_url é detectado automaticamente (ex.: https://usuario.github.io/repo/)
