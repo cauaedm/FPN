@@ -1,0 +1,26 @@
+🎓 *Nova Extensão no IC/UFRJ*
+
+*{{ titulo }}*
+{% if modalidade %}
+_{{ modalidade }}_
+{% endif %}
+
+{{ descricao_curta }}
+
+{% if coordenador %}
+👤 Coordenador: {{ coordenador }}
+{% endif %}
+{% if vagas %}
+🎯 Vagas: {{ vagas }}
+{% endif %}
+{% if data_termino_inscricoes %}
+⏰ Inscrições até: {{ data_termino_inscricoes }}
+{% endif %}
+{% if como_inscrever %}
+📝 {{ como_inscrever }}
+{% endif %}
+{% if link_inscricoes %}
+🔗 {{ link_inscricoes }}
+{% endif %}
+
+Mais informações: ic.ufrj.br

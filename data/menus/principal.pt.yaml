@@ -1,0 +1,86 @@
+- name: O Instituto
+  children:
+    - name: O Instituto
+      children:
+        - name: Apresentação
+          url: /info/apresentacao/
+        - name: Estrutura Administrativa
+          url: /info/estrutura-administrativa/
+        - name: Corpo Docente
+          url: /info/docentes/
+        - name: Corpo Técnico
+          url: /info/tecnicos/
+        - name: Contato e Localização
+          url: /info/contato/
+        # - name: História
+        # - name: "Missão, Visão e Valores"
+        # - name: Espaço Físico
+        # - name: Identidade Visual
+    - name: Serviços
+      children:
+        - name: Laboratório de Computação e Informática
+          url: /info/lci/
+        - name: Cadastro de Alunos Novos
+          url: /info/cadastro/
+
+- name: Graduação
+  children:
+    - name: Ciência da Computação
+      children:
+        - name: Sobre o Curso
+          url: /info/sobre-o-bcc/
+        - name: Projeto Pedagógico e Grade Curricular
+          url: /info/grade-curricular-bcc/
+        - name: Normas de Estágio
+          url: /info/normas-estagio-bcc/
+        - name: Normas de Atividades Complementares
+          url: /info/atividades-complementares-bcc/
+        - name: Normas de TCC
+          url: /info/tcc-bcc/
+        - name: Formas de Acesso
+          url: /info/formas-de-acesso-bcc/
+        - name: Colação de Grau
+          url: /info/colacao-de-grau-bcc/
+        - name: CAInfo
+          url: /info/cainfo/
+        - name: Manual do Aluno
+          url: /info/manual-do-aluno-bcc/
+    - name: Ciências Matemáticas e da&nbsp;Terra
+      children:
+        - name: Ênfase em Análise de Dados
+          url: /info/analise-de-dados-bcmt/
+    - name: Graduação em Geral
+      children:
+        # - name: Disciplinas de Formação
+        - name: Calendário Acadêmico
+          url: /info/calendario-academico/
+        - name: Formulários e Requerimentos
+          url: /info/formularios-graduacao/
+        - name: Inscrição em Disciplina
+          url: /info/inscricao-em-disciplina/
+        - name: Ofertas de Monitoria
+          url: /info/monitoria/
+        - name: Intercâmbio Internacional
+          url: /info/intercambio-internacional/
+
+- name: Pesquisa
+  children:
+    - children:
+      # - name: Grupos de Pesquisa
+        # url: /info/grupos-de-pesquisa/
+      - name: Iniciação Científica
+        url: /info/iniciacao-cientifica/
+
+- name: Extensão
+  children:
+    - children:
+      - name: Projetos de Extensão
+        url: /info/projetos-extensao/
+
+- name: Pós-Graduação
+  children:
+    - children:
+        - name: PPGI
+          url: /info/ppgi/
+        - name: ProfComp
+          url: /info/profcomp/

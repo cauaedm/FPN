@@ -1,0 +1,86 @@
+- id: localizacao
+  translation: "Address"
+
+- id: contato
+  translation: "Contact Us"
+
+- id: mais_informacoes_contato
+  translation: "More information"
+
+- id: link_mais_informacoes_contato
+  translation: "/en/info/contact/"
+
+- id: todos_direitos_reservados_ic
+  translation: "© All rights reserved - Institute of Computing / UFRJ"
+
+- id: instituto_de_computacao
+  translation: "Institute of Computing"
+
+- id: nome
+  translation: "Name"
+
+- id: email
+  translation: "Email"
+
+- id: lattes
+  translation: "Lattes"
+
+- id: pagina_pessoal
+  translation: "Personal Page"
+
+- id: titular
+  translation: "Full Professor"
+
+- id: adjunto
+  translation: "Adjunct Professor"
+
+- id: associado
+  translation: "Associate Professor"
+
+- id: assistente
+  translation: "Assistant Professor"
+
+- id: substituto
+  translation: "Substitute Professor"
+
+- id: redes-sociais
+  translation: "Social Media"
+
+- id: youtube-footer
+  translation: "YouTube"
+
+- id: github-footer
+  translation: "GitHub Organization"
+
+- id: telegram-footer
+  translation: "Computer Science Telegram Channel"
+
+- id: pag-docentes
+  translation: "/en/info/faculty/"
+
+# TODO: FIXME: adicionar esses dois
+
+- id: pag-tecnicos
+  translation: "/info/tecnicos/"
+
+- id: pag-grupos
+  translation: "/info/estrutura-administrativa/"
+
+- id: lista-de-membros
+  translation: "Members"
+
+- id: formulario-site
+  translation: "Feedback About this Website"
+
+- id: codigo-fonte-site
+  translation: "Source Code"
+
+- id: sumario
+  translation: "Table of Contents"
+
+- id: emails-de-contato
+  translation: "Contact Emails"
+
+- id: link-emails-de-contato
+  translation: "/info/estrutura-administrativa"
+

@@ -1,0 +1,154 @@
+---
+title: "ProfComp"
+date: 2025-10-21
+draft: false
+description: "Informações sobre o edital de seleção 2026"
+---
+
+## Apresentação
+
+O **Mestrado Profissional em Ensino de Computação para Educação Básica (PROFCOMP)** é um programa de pós-graduação stricto sensu em Ciência da Computação, em Rede Nacional, que segue o Programa Profissional para Professores da Educação Básica (PROEB/CAPES).
+
+O programa é liderado pela **Sociedade Brasileira de Computação (SBC)** e mais outras 16 Instituições Associadas, dentre as quais está a UFRJ, por meio do Instituto de Computação (IC-UFRJ). O curso foi reconhecido pela **PORTARIA MEC Nº 213, de  20 de março de 2025**.
+
+
+## Edital de seleção 2026
+
+**Inscrições de 1 a 31 de outubro de 2025**.
+
+Veja o edital completo no site da SBC:  [www.sbc.org.br/profcomp-sbc/](https://www.sbc.org.br/profcomp-sbc/)
+
+**Resultado do processo seletivo**.
+
+[Resultado preliminar](/info/profcomp-resultados-2026)
+
+**2a convocação para preenchimento de vagas remanescentes**.
+
+Em razão da desistência da vaga de AMPLA CONCORRÊNCIA do(a)s candidato(a)s com número de inscrição  1036010734911-3 e 1036010735079-1, convocamos o(a)s candidato(a)s listados abaixo para manifestação de interesse e apresentação da documentação exigida até o dia **12 de fevereiro de 2026**:
+
+| Classificação | Inscrição |
+|---------------|-----------|
+|15 |	1036010702981-5	|
+|16 |	1036010662922-2	|
+
+Informações complementares serão  enviadas por email para o(a)s candidato(a)s convocado(a)s.
+
+**3a convocação para preenchimento de vagas remanescentes**.
+
+Em razão da reclassificação de uma vaga de AÇÃO AFIRMATIVA após procedimento de heteroidentificação realizado no dia 5 de fevereiro, convocamos o(a) candidato(a) listado(a) abaixo para manifestação de interesse e apresentação da documentação exigida até o dia **12 de fevereiro de 2026**:
+
+| Classificação | Inscrição |
+|---------------|-----------|
+|6 |	1036010735332-1	    |
+
+
+Informações complementares serão  enviadas por email para o(a) candidato(a) convocado(a).
+
+**4a convocação para preenchimento de vagas remanescentes**.
+
+Em razão da desistência da vaga de AMPLA CONCORRÊNCIA do(a) candidato(a) com número de inscrição 1036010712407-2, convocamos o(a) candidato(a) listado(a) abaixo para manifestação de interesse e apresentação da documentação exigida até o dia **31 de março de 2026**:
+
+| Classificação | Inscrição |
+|---------------|-----------|
+|17 |	1036010732623-7	    |
+
+
+Informações complementares serão  enviadas por email para o(a) candidato(a) convocado(a).
+
+**5a convocação para preenchimento de vagas remanescentes**.
+
+Em razão da desistência da vaga de AMPLA CONCORRÊNCIA do(a) candidato(a) com número de inscrição 1036010732623-7, convocamos o(a) candidato(a) listado(a) abaixo para manifestação de interesse e apresentação da documentação exigida até o dia **8 de abril de 2026**:
+
+| Classificação | Inscrição |
+|---------------|-----------|
+|18 |	1036010670501-3	    |
+
+
+Informações complementares serão  enviadas por email para o(a) candidato(a) convocado(a).
+
+
+**Resultado Preliminar  - Processo seletivo de bolsistas do curso - turma 2026**.
+
+Seguindo os termos do [Edital 1/2026 - Retificação] (https://www.sbc.org.br/wp-content/uploads/2026/03/Edital-de-Bolsas-PROFCOMP-2026-Ret.pdf), foram recebidas as inscrições dos candidatos listados abaixo, classificados de acordo com as regras do referido edital.
+
+
+**Ampla concorrência**
+
+| Classificação | Inscrição | Atende aos requisitos do Edital? | Justificativa |
+|---------------|-----------|----------------------------------|---------------|
+|1|	1036010716097-5	|sim|
+|2|	1036010712407-2	|sim|
+|3|	1036010721198-1	|sim|
+|4|	1036010718888-1	|sim|
+|5|	1036010671505-1	|não|	Ultrapassa o rendimento bruto máximo definido.
+|6|	1036010725738-4	|sim|
+|7|	1036010662922-2	|não|	Ultrapassa o rendimento bruto máximo definido.
+
+
+**Candidatos autodeclarados negros e pardos e pessoas com deficiência:**
+
+| Classificação | Inscrição | Atende aos requisitos do Edital? | Justificativa |
+|---------------|-----------|----------------------------------|---------------|
+|1|	1036010666204-5	|sim|
+|2|	1036010654722-1	|sim|
+|3|	1036010672728-0	|não|	Ultrapassa o rendimento bruto máximo definido.
+|4|	1036010703684-3	|sim|
+|5|	1036010735332-1	|sim|
+
+A alocação das bolsas vai depender da disponibilidade orçamentária da CAPES.
+
+### Informações complementares - Edital de Seleção 2026 - IC-UFRJ
+
+- Procedimentos para ações afirmativas e compensatórias e cronograma: [Anexo IC-UFRJ](https://drive.google.com/file/d/1h5yfyJCvEzO8MHF_5wYwT5EUaASIXmB8/view?usp=drive_link)
+- Apenas o cronograma UFRJ: [Cronograma IC-UFRJ](https://drive.google.com/file/d/1nok4CZ1rwyBvwfkkeAEX1U3JM7Y189A1/view?usp=drive_link)
+
+## Regulamento PROFCOMP IC-UFRJ
+O Regulamento interno do PROFCOMP também está disponível: [Regulamento PROFCOMP IC-UFRJ](https://drive.google.com/file/d/1ZqluZ_F6WuMGeTRZjx6oi7xKE9hMyusw/view?usp=drive_link)
+
+## Dias e horários de aulas previstos para 2026-1
+
+Sexta-feira das 8h às 13h e Sábado das 9h às 13h, Cidade Universitária, Ilha do Fundão
+
+## Fale conosco
+
+Dúvidas e contato: envie mensagem para {{< email "secretaria@profcomp.ic.ufrj.br" >}}.
+
+
+## Disciplinas
+
+As disciplinas obrigatórias estão organizadas em 4 grupos:
+
+### Básicas (BA)
+
+Compreendem disciplinas para trabalhar o método científico, necessário não somente para pesquisa, mas para a realização de projetos escolares, enfatizando também questões éticas da pesquisa. As disciplinas de laboratório de prática docente visam fazer uma ligação entre os conhecimentos de Computação e a prática de ensino em sala de aula.
+
+* Método científico (30h)
+* Laboratório de prática docente em Pensamento computacional(30h)
+* Laboratório de prática docente em Mundo digital (30h)
+* Laboratório de prática docente em Cultura digital (30h)
+
+### Pensamento Computacional (PC)
+
+As disciplinas deste grupo visam desenvolver habilidades de resolução de problemas através da construção e automatização de algoritmos.
+
+* Introdução à computação (60h)
+* Pensamento computacional (60h)
+* Projeto de sistemas computacionais (60h)
+
+### Mundo Digital (MD)
+
+O objetivo deste grupo de disciplinas é a compreensão da estrutura e funcionamento de máquinas capazes de computar, bem como o entendimento de como se dá a distribuição da informação através das redes de computadores e a Internet, além de questões de segurança de sistemas computacionais.
+
+* Introdução ao computador (45h)
+* Redes e internet (45h)
+* Segurança e criptografia (45h)
+
+### Cultura Digital (CD)
+
+Este grupo de disciplinas desenvolve habilidades relacionadas ao uso de tecnologias digitais, tanto do ponto de vista de proficiência nessas tecnologias quanto no seu uso consciente, ético e seguro.
+
+* Ferramentas digitais na educação (30h)
+* Cultura digital (30h)
+* Computação e sociedade (30h)
+* Inteligência artificial e educação (30h)
+

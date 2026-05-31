@@ -1,0 +1,236 @@
+# Projetos de Extensão do Instituto de Computação - UFRJ
+#
+# Campos obrigatórios (RF18):
+#   titulo, coordenador, descricao, vagas, bolsa, processo_seletivo, perfil, contato
+#
+# Campos opcionais:
+#   area, modalidade, carga_horaria, link_inscricao
+#   ano_inicio, ano_fim (omitir ano_fim se projeto ainda ativo)
+
+automacao-extensao:
+  titulo: "Automação da Divulgação de Projetos de Extensão do IC"
+  coordenador: "A definir"
+  area: "Desenvolvimento de Software"
+  modalidade: "Projeto"
+  carga_horaria: 8
+  descricao: >
+    Desenvolvimento de um portal web integrado ao SIGA e de um sistema de notificações
+    multicanal para automatizar a divulgação dos projetos de extensão do Instituto de
+    Computação, eliminando retrabalho manual e ampliando o alcance junto à comunidade acadêmica.
+  vagas: 4
+  bolsa: false
+  processo_seletivo: "Entrevista com os coordenadores"
+  perfil: "Alunos de Ciência da Computação com interesse em desenvolvimento web, Hugo e automação de processos"
+  contato: "extensao@ic.ufrj.br"
+  ano_inicio: 2025
+
+obi-polo-ic:
+  titulo: "Olimpíada Brasileira de Informática — Polo IC"
+  coordenador: "Hugo Nobrega"
+  area: "Educação e Divulgação Científica"
+  modalidade: "Projeto"
+  carga_horaria: 4
+  descricao: >
+    O IC atua como polo de aplicação das provas e de preparação de alunos do ensino
+    fundamental e médio para a Olimpíada Brasileira de Informática. Alunos de graduação
+    podem participar como monitores e colaboradores na organização local das etapas.
+  vagas: 5
+  bolsa: false
+  processo_seletivo: "Análise de currículo pelos coordenadores"
+  perfil: "Alunos com interesse em competições de programação e ensino de algoritmos"
+  contato: "obi@ic.ufrj.br"
+  link_inscricao: "https://olimpiada.ic.unicamp.br/"
+  ano_inicio: 2023
+
+computacao-escolas:
+  titulo: "Computação nas Escolas"
+  coordenador: "Vivian dos Santos Silva"
+  area: "Educação Básica"
+  modalidade: "Projeto"
+  carga_horaria: 6
+  descricao: >
+    Oficinas de introdução à computação e pensamento computacional para alunos e
+    professores de escolas públicas do Rio de Janeiro, com foco em programação
+    visual e robótica educacional.
+  vagas: 4
+  bolsa: true
+  processo_seletivo: "Envio de currículo e carta de motivação para o e-mail de contato"
+  perfil: "Alunos com interesse em educação e didática de computação para o ensino básico"
+  contato: "computacao.escolas@ic.ufrj.br"
+  ano_inicio: 2024
+
+inclusao-digital:
+  titulo: "Inclusão Digital para a Terceira Idade"
+  coordenador: "Jonice Oliveira"
+  area: "Inclusão Social e Digital"
+  modalidade: "Projeto"
+  carga_horaria: 4
+  descricao: >
+    Capacitação em tecnologias digitais — uso de smartphones, serviços governamentais
+    online e segurança na internet — para idosos atendidos por organizações parceiras
+    da UFRJ no Rio de Janeiro.
+  vagas: 2
+  bolsa: true
+  processo_seletivo: "Entrevista com a coordenadora"
+  perfil: "Alunos com habilidades de comunicação e interesse em ensino para a terceira idade"
+  contato: "inclusao.digital@ic.ufrj.br"
+  ano_inicio: 2024
+
+tecnologia-ongs:
+  titulo: "Tecnologia para ONGs"
+  coordenador: "Giseli Rabello Lopes"
+  area: "Desenvolvimento Tecnológico"
+  modalidade: "Projeto"
+  carga_horaria: 10
+  descricao: >
+    Consultoria e desenvolvimento de soluções tecnológicas para organizações sem fins
+    lucrativos do Rio de Janeiro. Alunos atuam em equipes multidisciplinares para
+    diagnosticar problemas e entregar sistemas ou automações de baixo custo.
+  vagas: 6
+  bolsa: true
+  processo_seletivo: "Análise de portfólio e entrevista técnica"
+  perfil: "Alunos com experiência em desenvolvimento de software, análise de dados ou design de sistemas"
+  contato: "tech.ongs@ic.ufrj.br"
+  ano_inicio: 2023
+
+# ── Projetos importados da API portal.extensao.ufrj.br ──────────────────────
+# ATENÇÃO: preencher os campos marcados com ~ antes de publicar
+
+educacao-em-tea-transtorno-do-espectro-autista:
+  titulo: "Educação em TEA (Transtorno do Espectro Autista)"
+  coordenador: "Monica Ferreira"
+  area: "Educação"
+  modalidade: "Curso"
+  carga_horaria: 120
+  descricao: >
+    O curso visa proporcionar uma formação básica, tanto teórica quanto prática,
+    para alunos e servidores no atendimento de indivíduos com Transtorno do Espectro
+    Autista (TEA). Tem como objetivo fomentar reflexões e contribuir para a formação
+    de profissionais, capacitando-os a avaliar e aprimorar suas práticas. Além disso,
+    busca divulgar o conhecimento científico e práticas educacionais que promovam a
+    melhoria da qualidade de vida das pessoas diagnosticadas com TEA.
+  vagas: ~
+  bolsa: ~
+  processo_seletivo: ~
+  perfil: ~
+  contato: "extensao.tea@nce.ufrj.br"
+  link_inscricao: "https://forms.gle/dW8w3pNwenoqgYSi6"
+  ano_inicio: 2024
+
+curso-de-linux-do-basico-a-administracao:
+  titulo: "Curso de Linux: do Básico à Administração"
+  coordenador: "Gabriel Pereira da Silva"
+  area: "Tecnologia e Produção"
+  modalidade: "Curso"
+  carga_horaria: 60
+  descricao: >
+    O curso tem como objetivo que o aluno aprenda a trabalhar em sistemas Linux,
+    tanto na parte de comandos básicos, shell script e tarefas básicas de administração,
+    como criação de usuários, controle de processos, realização de backup, instalação
+    de programas e configurações de serviços com DHCP, DNS, servidor de impressão,
+    configuração da rede e de firewall. Elaborado para o ensino à distância, com aulas
+    virtuais, exercícios online e listas de exercícios.
+  vagas: ~
+  bolsa: ~
+  processo_seletivo: ~
+  perfil: ~
+  contato: "cursolinux@ic.ufrj.br"
+  link_inscricao: "https://forms.gle/cYUWaGt5eS2nr5fs7"
+  ano_inicio: 2024
+
+olimpiadas-matematicas-universitarias:
+  titulo: "Olimpíadas Matemáticas Universitárias"
+  coordenador: "Gabriel Pereira da Silva"
+  area: "Educação"
+  modalidade: "Curso"
+  carga_horaria: 180
+  descricao: >
+    Esta ação propõe a realização de um curso preparatório para Olimpíadas
+    Matemáticas Universitárias com os seguintes conteúdos: Álgebra Linear,
+    Cálculo, Geometria, Matemática Discreta, Teoria dos Números, Análise e
+    Álgebra. Serão abordadas noções de matemática olímpica com conteúdos
+    exigidos a um aluno do nível 3 das olimpíadas escolares.
+  vagas: ~
+  bolsa: ~
+  processo_seletivo: ~
+  perfil: ~
+  contato: "romu@ic.ufrj.br"
+  link_inscricao: "http://bit.ly/romu2023"
+  ano_inicio: 2023
+
+curso-python-jogos:
+  titulo: "Curso de Programação em Python Usando e Construindo Jogos"
+  coordenador: "Carlo Emmanoel Tolla de Oliveira"
+  area: "Tecnologia e Produção"
+  modalidade: "Curso"
+  carga_horaria: 34
+  descricao: >
+    Curso presencial no NCE com duração de 34 horas, voltado ao aprendizado de
+    programação em Python por meio do desenvolvimento de jogos. As aulas acontecem
+    às quartas-feiras, das 13h30 às 15h30, com 40 vagas por edição.
+  vagas: 40
+  bolsa: ~
+  processo_seletivo: "Inscrição via formulário online"
+  perfil: ~
+  contato: "acs@nce.ufrj.br"
+  link_inscricao: "https://docs.google.com/forms/d/1XAH6RttqKiP4UqrohXvlfQNSeicuVxKFxqbvj0ufu7U/viewform"
+  ano_inicio: 2025
+
+introducao-ao-linux-da-teoria-a-pratica:
+  titulo: "Introdução ao Linux: da Teoria à Prática"
+  coordenador: "Marcos Tomazzoli Leipnitz"
+  area: "Tecnologia e Produção"
+  modalidade: "Curso"
+  carga_horaria: 90
+  descricao: >
+    Curso introdutório sobre o sistema operacional Linux, abordando histórico,
+    inicialização do sistema, estrutura de arquivos, partições, comandos básicos,
+    shell script, administração básica e backup. Ofertado a distância pelo AVA da UFRJ,
+    com aulas virtuais, atividades práticas e fóruns de discussão. Voltado para
+    estudantes e profissionais que desejam iniciar no uso do Linux para fins pessoais,
+    acadêmicos ou profissionais.
+  vagas: ~
+  bolsa: ~
+  processo_seletivo: ~
+  perfil: ~
+  contato: "cursolinux@ic.ufrj.br"
+  link_inscricao: "https://forms.gle/3aX5HHa6HfyneDNcA"
+  ano_inicio: 2025
+
+curso-avancado-de-linux-administracao:
+  titulo: "Curso Avançado de Linux — Administração"
+  coordenador: "Carolina Gil Marcelino"
+  area: "Tecnologia e Produção"
+  modalidade: "Curso"
+  carga_horaria: 90
+  descricao: >
+    Curso de administração de servidores Linux para administração de pequenas redes
+    de computadores. Aborda configuração de serviços, gerenciamento de usuários e
+    permissões, segurança e automação de tarefas administrativas.
+  vagas: ~
+  bolsa: ~
+  processo_seletivo: ~
+  perfil: ~
+  contato: "carolina@ic.ufrj.br"
+  link_inscricao: "https://forms.gle/hHywWvWod91i6vSH8"
+  ano_inicio: 2025
+
+semana-da-computacao-2026:
+  titulo: "Semana da Computação 2026"
+  coordenador: "Marcos Tomazzoli Leipnitz"
+  area: "Tecnologia e Produção"
+  modalidade: "Evento"
+  carga_horaria: 280
+  descricao: >
+    A Semana da Computação UFRJ é um evento gratuito e aberto que reúne estudantes,
+    docentes, profissionais e interessados para discutir tecnologia e seus impactos
+    na sociedade. A programação inclui palestras, oficinas, mesas-redondas, feira de
+    projetos, competições e atividades interativas, abordando temas atuais e conectando
+    formação, pesquisa e mercado de trabalho.
+  vagas: ~
+  bolsa: false
+  processo_seletivo: "Inscrição gratuita pelo link"
+  perfil: "Aberto a toda a comunidade — estudantes, docentes e público externo"
+  contato: "semanadacomputacao@ic.ufrj.br"
+  link_inscricao: "https://www.even3.com.br/semana-da-computacao-ufrj-2026-701609/"
+  ano_inicio: 2026

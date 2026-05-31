@@ -1,0 +1,53 @@
+<div id="barra-superior">
+  <a href="{{ "/" | relLangURL }}" id="logo-principal">
+    <img src="{{ "/svg/logo-ic.svg" | relURL }}" alt="Logo do IC" height="40px">
+    <p>{{ i18n "instituto_de_computacao" }}<br>UFRJ</p>
+  </a>
+  <label for="hamburger" id="hamburger-label"><img src="{{ "/svg/menu.svg" | relURL }}" alt="Abrir menu" height="50px"></label>
+</div>
+
+<nav id="main-header">
+  <input type="checkbox" id="hamburger">
+
+  <ul class="principal">
+    {{ $menu := index site.Data.menus (printf "principal.%s" .Site.Language.Lang) }}
+    {{ range $menu }}
+      <li>
+        <button type="button" aria-expanded="false" aria-controls="{{ .name | urlize }}-dropdown">{{ .name }}</button>
+        <ul>
+          {{ range .children }}
+            <li>
+              {{ if .name }}
+                <span>{{ htmlUnescape .name }}</span>
+              {{ end }}
+              <ul>
+                {{ range .children }}
+                  {{ if .url }}
+                    <li><a href="{{ .url }}">{{ htmlUnescape .name }}</a></li>
+                  {{ else }}
+                    <li><a href="https://dcc.ufrj.br/" style="color:red;">{{ htmlUnescape .name }}</a></li>
+                  {{ end }}
+                {{ end }}
+              </ul>
+            </li>
+          {{ end }}
+        </ul>
+      </li>
+    {{ end }}
+  </ul>
+  <ul id="links-header">
+    {{ $menu := index site.Data.menus (printf "links.%s" .Site.Language.Lang) }}
+    {{ range $menu }}
+      <li><a href="{{ .url }}" target="_blank" rel="noopener">
+        {{ .name }}<i class="bi bi-arrow-up-right"></i>
+      </a></li>
+    {{ end }}
+    {{ range .Translations }}
+      <li><a href="{{ .RelPermalink }}" class="linguagem">{{ .Language.LanguageCode | upper }}</a></li>
+    {{ end }}
+  </ul>
+</nav>
+
+
+
+

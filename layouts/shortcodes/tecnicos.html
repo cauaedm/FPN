@@ -1,0 +1,49 @@
+{{- $data := slice -}}
+{{- range $key, $value := .Site.Data.tecnicos -}}
+  {{- $item := merge (dict "username" $key) $value -}}
+  {{- $data = $data | append $item -}}
+{{- end -}}
+
+{{- $data := sort $data "nome" -}}
+
+<ul class="cards-pessoais">
+  {{ range $data }}
+
+    <!-- Acha os grupos em que o tecnico faz parte -->
+    {{ $grupos := slice }}
+    {{ range $key, $value := site.Data.grupos }}
+      {{ $item := merge (dict "username" $key) $value }}
+      {{ $grupos = $grupos | append $item }}
+    {{ end }}
+    {{ $grupos := where $grupos "membros" "intersect" (slice .username) }}
+    {{ $grupos := sort $grupos "nome" }}
+
+    <li class="card-pessoal" id="{{ .username }}">
+      <span class="nome">{{ .nome }}</span>
+
+      <span class="cargo">{{ i18n .cargo }}</span>
+
+      {{ if ne .email "OCULTO" }}
+        {{ partial "email.html" (.email | default .username) }}
+      {{ end }}
+
+      {{ if .lattes }}
+        <a href="{{ .lattes }}">{{ i18n "lattes" }}</a>
+      {{ end }}
+
+      {{ if .site }}
+        <a href="{{ .site }}">{{ i18n "pagina_pessoal" }}</a>
+      {{ end }}
+
+      <!--
+      {{ range $grupos }}
+        <a class="grupo" href="{{ i18n "pag-grupos" }}#{{ .username }}">
+          {{ .nome }}
+        </a>
+      {{ end }}
+      -->
+    </li>
+  {{ end }}
+</ul>
+
+

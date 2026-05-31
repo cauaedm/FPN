@@ -1,0 +1,116 @@
+{{- $data := slice -}}
+{{- range $key, $value := .Site.Data.extensoes -}}
+  {{- $item := merge (dict "chave" $key) $value -}}
+  {{- $data = $data | append $item -}}
+{{- end -}}
+
+{{- $ativos     := where $data "ano_fim" nil -}}
+{{- $concluidos := where $data "ano_fim" "ne" nil -}}
+{{- $ativos     = sort $ativos    "ano_inicio" "desc" -}}
+{{- $concluidos = sort $concluidos "ano_inicio" "desc" -}}
+
+{{ if $ativos }}
+<h2>Projetos em andamento</h2>
+<ul class="lista-extensoes">
+  {{ range $ativos }}
+  <li>
+    <article class="card-extensao" id="{{ .chave }}" aria-labelledby="titulo-{{ .chave }}">
+
+      <header class="card-extensao-header">
+        <h3 id="titulo-{{ .chave }}">{{ .titulo }}</h3>
+        {{ with .area }}<span class="extensao-area">{{ . }}</span>{{ end }}
+      </header>
+
+      {{ with .descricao }}<p class="extensao-descricao">{{ . }}</p>{{ end }}
+
+      <dl class="extensao-metadados">
+        <dt>Coordenador</dt>
+        <dd>{{ .coordenador }}</dd>
+
+        <dt>Início</dt>
+        <dd>{{ .ano_inicio }}</dd>
+
+        {{ with .modalidade }}
+        <dt>Modalidade</dt>
+        <dd>{{ . }}</dd>
+        {{ end }}
+
+        {{ with .carga_horaria }}
+        <dt>Carga horária</dt>
+        <dd>{{ . }}h/semana</dd>
+        {{ end }}
+
+        <dt>Vagas</dt>
+        <dd>
+          {{ if gt (default 0 .vagas) 0 }}
+            {{ .vagas }}
+          {{ else }}
+            <span class="sem-vagas">Sem vagas no momento</span>
+          {{ end }}
+        </dd>
+
+        <dt>Bolsa</dt>
+        <dd>{{ if .bolsa }}Sim{{ else }}Não{{ end }}</dd>
+
+        {{ with .processo_seletivo }}
+        <dt>Processo seletivo</dt>
+        <dd>{{ . }}</dd>
+        {{ end }}
+      </dl>
+
+      {{ with .perfil }}
+      <p class="extensao-perfil"><strong>Perfil desejado:</strong> {{ . }}</p>
+      {{ end }}
+
+      <footer class="card-extensao-footer">
+        {{ with .contato }}
+          <span>Contato: <a href="mailto:{{ . }}">{{ . }}</a></span>
+        {{ end }}
+        {{ with .link_inscricao }}
+          <a href="{{ . }}" target="_blank" rel="noopener">Inscrever-se →</a>
+        {{ end }}
+      </footer>
+
+    </article>
+  </li>
+  {{ end }}
+</ul>
+{{ end }}
+
+{{ if $concluidos }}
+<h2>Projetos concluídos</h2>
+<ul class="lista-extensoes">
+  {{ range $concluidos }}
+  <li>
+    <article class="card-extensao card-extensao-concluido" id="{{ .chave }}" aria-labelledby="titulo-{{ .chave }}">
+
+      <header class="card-extensao-header">
+        <h3 id="titulo-{{ .chave }}">{{ .titulo }}</h3>
+        {{ with .area }}<span class="extensao-area">{{ . }}</span>{{ end }}
+      </header>
+
+      {{ with .descricao }}<p class="extensao-descricao">{{ . }}</p>{{ end }}
+
+      <dl class="extensao-metadados">
+        <dt>Coordenador</dt>
+        <dd>{{ .coordenador }}</dd>
+
+        <dt>Período</dt>
+        <dd>{{ .ano_inicio }}–{{ .ano_fim }}</dd>
+      </dl>
+
+      <footer class="card-extensao-footer">
+        {{ with .link_inscricao }}
+          <a href="{{ . }}" target="_blank" rel="noopener">Mais informações →</a>
+        {{ end }}
+      </footer>
+
+    </article>
+  </li>
+  {{ end }}
+</ul>
+{{ end }}
+
+{{ if and (not $ativos) (not $concluidos) }}
+<p>Nenhum projeto cadastrado ainda.</p>
+{{ end }}

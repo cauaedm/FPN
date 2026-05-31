@@ -1,0 +1,60 @@
+name: Deploy Hugo to GitHub Pages
+
+# Demo do TCC — publica o site Hugo no GitHub Pages.
+# O workflow oficial (deploy.yml, rsync) continua independente.
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+# Permissões necessárias para publicar no GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Garante um único deploy por vez
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.161.1'
+          extended: true
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Build site
+        # base_url é detectado automaticamente (ex.: https://usuario.github.io/repo/)
+        run: hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

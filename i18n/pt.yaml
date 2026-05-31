@@ -1,0 +1,84 @@
+- id: localizacao
+  translation: "Localização"
+
+- id: contato
+  translation: "Contato"
+
+- id: mais_informacoes_contato
+  translation: "Mais informações de contato"
+
+- id: link_mais_informacoes_contato
+  translation: "/info/contato/"
+
+- id: todos_direitos_reservados_ic
+  translation: "© Todos os direitos reservados - Instituto de Computação / UFRJ"
+
+- id: instituto_de_computacao
+  translation: "Instituto de Computação"
+
+- id: nome
+  translation: "Nome"
+
+- id: email
+  translation: "Email"
+
+- id: lattes
+  translation: "Lattes"
+
+- id: pagina_pessoal
+  translation: "Página Pessoal"
+
+- id: titular
+  translation: "Prof. Titular"
+
+- id: adjunto
+  translation: "Prof. Adjunto"
+
+- id: associado
+  translation: "Prof. Associado"
+
+- id: assistente
+  translation: "Prof. Assistente"
+
+- id: substituto
+  translation: "Prof. Substituto"
+
+- id: redes-sociais
+  translation: "Redes Sociais"
+
+- id: youtube-footer
+  translation: "YouTube"
+
+- id: github-footer
+  translation: "Organização do GitHub"
+
+- id: telegram-footer
+  translation: "Telegram da Coordenação do BCC"
+
+- id: pag-docentes
+  translation: "/info/docentes/"
+
+- id: pag-tecnicos
+  translation: "/info/tecnicos/"
+
+- id: pag-grupos
+  translation: "/info/estrutura-administrativa/"
+
+- id: lista-de-membros
+  translation: "Lista de Membros"
+
+- id: formulario-site
+  translation: "Formulário de Feedback do Site"
+
+- id: codigo-fonte-site
+  translation: "Código Fonte"
+
+- id: sumario
+  translation: "Sumário"
+
+- id: emails-de-contato
+  translation: "E-mails de Contato"
+
+- id: link-emails-de-contato
+  translation: "/info/estrutura-administrativa"
+

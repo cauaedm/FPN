@@ -1,0 +1,15 @@
+{{ define "main" }}
+  <article>
+    <div class="masshead"><h1>{{ .Title }}</h1></div>
+    {{ range .Pages }}
+      <article class="noticia">
+        <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+        <small>{{ .Date | time.Format ":date_long" }}</small>
+        <div class="{{ if .Params.description }}descricao-noticia{{ else }}preview-noticia{{ end }}">
+          {{ .Params.description | default .Summary | plainify }}
+        </div>
+      </article>
+    {{ end }}
+  </article>
+{{ end }}
+

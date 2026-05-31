@@ -1,0 +1,51 @@
+- name: The Institute
+  children:
+    - children:
+      - name: History
+      # - name: "Missão, Visão e Valores"
+      # - name: Espaço Físico
+      # - name: Estrutura Administrativa
+      # - name: Identidade Visual
+      - name: Address
+      - name: Contact Us
+    - name: People
+      children:
+        - name: Faculty
+          url: /en/info/faculty/
+        - name: Support Staff
+
+- name: Education
+  children:
+    - name: Computer Science
+      children:
+        - name: Introduction
+      # - name: BCMT
+      # children:
+      # - name: Ênfase em Análise de Dados
+    - name: Other Bachelors
+      children:
+        - name: Academic Calendar
+    - name: Graduate Program
+      children:
+        - name: PPGI
+
+- name: Opportunities
+  children:
+    - name: Research
+      children:
+        # - name: Grupos de Pesquisa
+        - name: Projects
+        # - name: Iniciação Científica
+        # - name: Editais
+      # - name: Extensão
+      # children:
+      # - name: Projetos de Extensão
+    - children:
+        # - name: Vagas
+        - name: Selection
+
+- name: User
+  children:
+    - children:
+      - name: Registration of Students
+

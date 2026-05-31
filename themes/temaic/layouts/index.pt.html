@@ -1,0 +1,33 @@
+{{ define "title"}}{{ i18n "instituto_de_computacao" }}{{ end }}
+
+{{ define "main" }}
+
+<div class="container-imagem-principal">
+  <img class="imagem-principal" src="/img/parede-vermelha.jpg">
+</div>
+
+<article>
+  <h2>Notícias Recentes</h2>
+
+  {{ range first 5 (where .Site.RegularPages "Section" "noticias" ) }}
+    <article class="noticia">
+      <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+      <small>{{ .Date | time.Format ":date_long" }}</small>
+      <div class="{{ if .Params.description }}descricao-noticia{{ else }}preview-noticia{{ end }}">
+        {{ .Params.description | default .Summary | plainify }}
+      </div>
+    </article>
+  {{ end }}
+
+  <p><strong><a href="{{ "/noticias" | relLangURL }}">Ver mais notícias</a></strong></p>
+
+  <p>
+    <a title="Consultar Cadastro e-MEC" href="https://emec.mec.gov.br/emec/consulta-cadastro/detalhamento/d96957f455f6405d14c6542552b0f6eb/NTg2" style="display: flex; justify-content: center;">
+      <img src="/img/cadastro-e-mec.png" alt="Banner de consulta cadastro e-MEC com QR Code">
+    </a>
+  </p>
+
+</article>
+
+{{ end }}
+

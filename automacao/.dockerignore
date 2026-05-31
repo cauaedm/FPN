@@ -1,0 +1,13 @@
+# Não enviar para a imagem do Railway
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+data/*.db
+data/*.db-journal
+templates/*.eml
+templates/_preview_*.html
+*.log

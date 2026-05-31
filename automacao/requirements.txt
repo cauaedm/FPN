@@ -1,0 +1,16 @@
+# Automação de Extensões IC/UFRJ
+# Instale com: pip install -r requirements.txt
+
+# Variáveis de ambiente
+python-dotenv>=1.0.0
+
+# Agendador de tarefas
+APScheduler>=3.10.4
+
+# (Opcional) Twilio para WhatsApp — descomente se usar backend Twilio
+# twilio>=9.0.0
+
+# (Opcional) Jinja2 para templates mais avançados — descomente se quiser
+# Jinja2>=3.1.4
+
+# Todas as outras dependências (urllib, smtplib, sqlite3, json) são da stdlib Python 3.10+

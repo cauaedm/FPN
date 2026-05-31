@@ -1,0 +1,43 @@
+baseURL: "https://ic.ufrj.br/"
+title: "Instituto de Computação"
+theme: temaic
+
+module:
+  hugoVersion:
+    min: "0.149.1"
+
+taxonomies: []
+
+defaultContentLanguage: pt
+defaultContentLanguageInSubdir: false
+languages:
+  pt:
+    languageName: Português
+    languageCode: "pt-BR"
+    contentDir: content/pt
+    weight: 1
+  en:
+    languageName: English
+    languageCode: en
+    contentDir: content/en
+    weight: 2
+
+markup:
+  highlight:
+    style: nord
+  goldmark:
+    renderer:
+      unsafe: true
+
+services:
+  googleAnalytics:
+    id: G-7MT71KGPF2
+privacy:
+  googleAnalytics:
+    respectDoNotTrack: true
+
+
+params:
+  images:
+  - /img/parede-vermelha.jpg
+

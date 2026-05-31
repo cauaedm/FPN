@@ -1,0 +1,919 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1.2em;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+:root {
+	--cor-ic1: #344563;
+	--cor-ic2: #667DA6;
+
+	--cor-fundo: #FFFFFF;
+	--cor-fundo-menu: var(--cor-ic1);
+	--cor-fundo-menu-cima: #202020;
+	--cor-fundo-apagado: #506080;
+	--cor-texto: #000000;
+	--cor-texto-branco: #FFFFFF;
+	--cor-accent-artigo: var(--cor-ic1);
+	--cor-borda-cinza: #919294;
+
+	--menu-padding: calc(50vw - 600px);
+}
+
+* {
+	/* Usado para o padding não quebrar tudo */
+	box-sizing: border-box;
+	/* Não colorir links */
+	color: inherit;
+}
+
+body {
+	font-size: 17px;
+	font-family: Arial;
+	background-color: var(--cor-fundo);
+	color: var(--cor-texto);
+}
+
+/* Obfuscação de emails (usado pelo shortcode de email) */
+.email > span:nth-child(2), .email > span:nth-child(3) {
+	display: none;
+}
+
+
+/* Tudo que faz parte do header */
+body > header * {
+	/* Faz com que os links não fiquem azuis e sublinhados como normalmente
+	 * ficam no HTML padrão */
+	color: inherit;
+	text-decoration: inherit;
+}
+
+body > header {
+	/* Seta tudo dentro do header para usar Montserrat como fonte */
+	font-family: "Montserrat", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+
+	user-select: none;
+}
+
+body > header a,
+body > header button,
+#hamburger-label {
+	/* Faz o ponteiro ficar daquele jeito de quando passa por um link */
+	cursor: pointer;
+}
+
+body > header a:hover {
+	/* Faz os links ficarem sublinhados ao passar o mouse por cima */
+	text-decoration: underline;
+}
+
+/* Se refere ao flexbox contendo os links externos no topo direito da página */
+#links-header {
+	/* Faz com que ele fique "dentro" do menu principal, ou seja, que ele
+	 * não faça o menu principal se deslocar para baixo. Já o right se
+	 * comporta de forma semelhante a um padding-right */
+	position: absolute;
+	top: 0px;
+	right: var(--menu-padding);
+
+	height: 70px;
+
+	padding: 0px;
+
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 20px;
+
+	color: var(--cor-texto);
+
+	font-weight: 300;
+}
+
+/* TODO: refazer */
+#links-header .linguagem {
+	font-weight: 600;
+	border: solid 1px var(--cor-texto-branco);
+	padding: 2px;
+	border-radius: 5px;
+}
+
+#barra-superior {
+	height: 70px;
+	display: flex;
+}
+
+/* Se refere ao menu principal no topo da página, com a logo do IC e as
+ * categorias de menu. Inclui também a parte escondida do menu que abre
+ * embaixo, porém ela não é exibida durante a maior parte do tempo */
+#main-header {
+	display: flex;
+	justify-content: center;
+
+	padding: 5px var(--menu-padding);
+
+	color: var(--cor-texto-branco);
+	background-color: var(--cor-fundo-menu-cima);
+}
+
+#hamburger-label, #hamburger {
+	display: none;
+}
+
+/* Se refere ao conjunto da logo do IC e do texto
+ * "Instituto de Computação UFRJ" */
+#logo-principal {
+	display: flex;
+	align-items: center;
+
+	height: 100%;
+
+	gap: 30px;
+
+	font-weight: 300;
+	line-height: 23px;
+
+	padding: 0 0 0 var(--menu-padding);
+}
+
+/* Se refere às categorias O INSTITUTO, ENSINO, etc. Porém, também pode afetar
+ * o menu escondido */
+#main-header > .principal {
+	display: flex;
+	align-items: center;
+	gap: 30px;
+}
+
+/* Se refere aos textos O INSTITUTO, ENSINO, etc */
+#main-header > .principal > li > button {
+	font-weight: 600;
+	font-size: 18px;
+	text-transform: uppercase;
+
+	padding: 0.5em 0;
+	margin: 0;
+
+	display: flex;
+	align-items: center;
+
+	background: none;
+	border: none;
+	outline: none;
+}
+
+#main-header > .principal > li {
+	position: relative;
+}
+
+/* Se refere aos menus escondidos (há um para cada categoria) */
+#main-header > .principal > li > ul {
+	/* Esconde o menu */
+	clip-path: inset(0 0 100% 0);
+
+	z-index: 10;
+
+	position: absolute;
+	top: 50px;
+	right: -30px;
+
+	max-width: 700px;
+
+	background-color: var(--cor-fundo);
+	color: var(--cor-texto);
+
+	border: 1px solid var(--cor-borda-cinza);
+	border-radius: 10px;
+
+	padding: 20px;
+
+	display: flex;
+	gap: 20px;
+	justify-content: center;
+
+	transition: clip-path 150ms ease-out 100ms;
+}
+#main-header > .principal > li:nth-child(1) > ul,
+#main-header > .principal > li:nth-child(2) > ul {
+	left: -30px;
+	right: auto;
+}
+
+#main-header > .principal > li > ul::before {
+	content: "";
+	width: 30px;
+	height: 20px;
+	background-color: var(--cor-fundo);
+	position: absolute;
+	top: -20px;
+	right: 80px;
+	clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+#main-header > .principal > li:nth-child(1) > ul::before,
+#main-header > .principal > li:nth-child(2) > ul::before {
+	left: 80px;
+}
+
+
+/* Se refere às subcategorias do menu escondido */
+#main-header > .principal > li > ul > li {
+	width: 250px;
+	padding: 10px;
+}
+
+/* Se refere aos títulos das subcategorias do menu escondido */
+#main-header > .principal > li > ul > li > span {
+	display: block;
+	margin-bottom: 30px;
+
+	font-weight: 600;
+}
+
+/* Se refere à lista de links contida dentro de cada subcategoria de menu */
+#main-header > .principal > li > ul > li > ul {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	line-height: 20px;
+}
+
+.masshead {
+	display: flex;
+	height: 100px;
+	width: 100vw;
+	margin-left: calc(380px - 50vw);
+
+	align-items: center;
+	justify-content: center;
+
+	background: url("/img/masshead.jpg");
+	background-size: cover;
+	background-position: center center;
+
+	margin-bottom: 15px;
+}
+
+.masshead h1 {
+	color: var(--cor-texto-branco);
+	padding: 15px;
+	border-radius: 10px;
+
+	text-transform: uppercase;
+	font-weight: 800;
+	font-size: 25px;
+
+	text-align: center;
+}
+
+@media screen and (max-width: 800px) {
+	.masshead {
+		margin-left: -20px;
+	}
+}
+
+
+@media screen and (max-width: 1270px) {
+	:root {
+		--menu-padding: 30px;
+	}
+}
+
+@media screen and (min-width: 930px) {
+	#main-header > .principal > li:hover > button,
+	#main-header > .principal > li:focus > button,
+	#main-header > .principal > li:focus-within > button {
+		/*background-color: rgba(0, 0, 0, 0.2);
+		border-radius: 10px;*/
+		text-decoration: underline;
+	}
+
+	/* Se refere aos menus escondidos enquanto a categoria tem foco */
+	#main-header > .principal > li:hover > ul,
+	#main-header > .principal > li:focus > ul,
+	#main-header > .principal > li:focus-within > ul {
+		clip-path: inset(-50px 0 0 0);
+		transition-delay: 200ms;
+	}
+}
+
+@media screen and (max-width: 930px) {
+	:root {
+		--menu-padding: 15px;
+	}
+
+	#links-header, #main-header .principal {
+		display: none;
+	}
+
+	#logo-principal {
+		margin: 0 auto 0 0;
+		height: 70px;
+	}
+	#logo-principal > img {
+		width: 60px;
+	}
+
+	#hamburger-label {
+		display: flex;
+		align-items: center;
+		position: absolute;
+		top: 0;
+		right: var(--menu-padding);
+		height: 70px;
+	}
+
+	#hamburger:checked + .principal {
+		display: block;
+	}
+	#hamburger:checked + .principal + #links-header {
+		display: block;
+	}
+
+	#links-header {
+		position: static;
+		flex-direction: column;
+		background-color: var(--cor-fundo-menu-cima);
+		padding: 20px var(--menu-padding);
+		color: var(--cor-texto-branco);
+		height: auto;
+		width: auto;
+		margin: 0 auto;
+	}
+	#links-header > li {
+		margin: 13px 0;
+	}
+
+	#main-header {
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-evenly;
+		height: auto;
+		padding: 0;
+	}
+
+	#main-header > .principal {
+		width: 100%;
+		flex-direction: column;
+
+		/* Por que isso está aqui? */
+		align-items: flex-end;
+	}
+
+	#main-header > .principal > li > button {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+	}
+
+	#main-header > .principal > li {
+		width: 100%;
+		position: static;
+		margin: 15px 0;
+	}
+
+	#main-header > .principal > li > ul {
+		position: static;
+		flex-direction: column;
+		align-items: center;
+		max-width: none;
+		width: 100%;
+		background: none;
+		border: none;
+
+		display: flex;
+		clip-path: inset(-50px 0 0 0);
+		transition-delay: 200ms;
+	}
+
+	#main-header > .principal > li > ul::before {
+		content: none;
+	}
+
+	#main-header > .principal > li > ul > li {
+		background-color: var(--cor-fundo);
+		border: none;
+		border-radius: 10px;
+		padding: 20px;
+		width: 100%;
+		text-align: center;
+	}
+
+	.masshead {
+		height: auto;
+
+		align-items: center;
+		justify-content: center;
+
+		/*background: none;*/
+	}
+
+	.masshead h1 {
+		/*color: var(--cor-texto);*/
+		line-height: 1.2em;
+
+		font-size: 25px;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	#logo-principal p {
+		display: none;
+	}
+}
+
+
+footer {
+	font-family: "Montserrat", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+	font-size: 90%;
+
+	color: var(--cor-texto-branco);
+}
+
+footer > * {
+	width: 100vw;
+	padding: 0 var(--menu-padding);
+}
+
+footer .superior, footer .menu-footer {
+	background-color: var(--cor-ic1);
+
+	justify-content: space-between;
+
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+footer .superior > *, footer .menu-footer > * {
+	padding: 20px;
+}
+
+footer .superior h2, footer .menu-footer h2 {
+	display: block;
+	padding-bottom: 15px;
+	font-weight: 600;
+}
+
+footer .superior ul, footer .menu-footer ul {
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+}
+
+
+footer .inferior {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+
+	background-color: var(--cor-fundo-menu-cima);
+}
+
+footer .inferior > * {
+	padding: 20px;
+	margin: auto;
+}
+
+footer .inferior .social {
+	display: flex;
+	gap: 10px;
+}
+
+
+main {
+	background-color: var(--cor-fundo);
+	padding: 0 0 15px 0;
+	margin: 0;
+}
+
+main > * {
+	width: 100%;
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+article {
+	font-family: "Open Sans", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+}
+
+main h1, main h2, main h3, main h4, main h5, main h6 {
+	font-family: "Montserrat", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 600;
+	font-style: normal;
+}
+
+article table, article blockquote, article pre, article .highlight,
+article ul, article ol {
+	margin: 10px 0;
+}
+
+article .highlight * {
+	margin: 0;
+}
+
+article .highlight > pre {
+	padding: 10px;
+	border-radius: 10px;
+}
+
+article h2, article h3, article h4, article h5, article h6 {
+	margin: 20px 0;
+	line-height: 1.2em;
+}
+
+article h1 { color: red; /* nunca use h1 no markdown. Só deve ter um h1 por página */ }
+article h2 { font-size: 160%; font-weight: 800; }
+article h3 { font-size: 140%; font-weight: 700; }
+article h4 { font-size: 120%; font-weight: 700; }
+article h5 {                  font-weight: 700; }
+article h6 {                  font-weight: 500; }
+
+article p + p {
+	margin-top: 15px;
+}
+
+article ul, article ol {
+	margin-left: 25px;
+}
+
+article ul > li, article ol > li {
+	margin-top: 6px;
+	margin-bottom: 6px;
+}
+
+article ul > li::marker, article ol > li::marker {
+	color: var(--cor-accent-artigo);
+}
+
+article ul { list-style: disc; }
+article ul ul { list-style: circle; }
+article ul ul ul { list-style: square; }
+article ol { list-style: decimal; }
+article ol ol { list-style: upper-roman; }
+article ol ol ol {list-style: lower-latin; }
+
+article strong {
+	font-weight: bold;
+}
+
+article em {
+	font-style: italic;
+}
+
+article a {
+	color: var(--cor-accent-artigo);
+}
+
+article code {
+	font-family: monospace;
+}
+
+article table, article pre {
+	display: block;
+	max-width: 100%;
+	/* TODO: testar overflow-x: auto */
+	overflow-x: scroll;
+	overflow-y: hidden;
+}
+
+article table thead {
+	color: var(--cor-accent-artigo);
+	font-weight: 700;
+}
+
+article table th, article table td {
+	padding: 5px;
+	border: 1px solid var(--cor-accent-artigo);
+}
+
+article blockquote {
+	margin-left: 40px;
+	color: var(--cor-accent-artigo);
+	border-left: 10px solid var(--cor-accent-artigo);
+}
+
+article input[type="checkbox"] {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 1em;
+	height: 1em;
+	margin: 0 5px;
+	border: 1px solid var(--cor-accent-artigo);
+}
+
+article input[type="checkbox"]:checked {
+	background-color: var(--cor-accent-artigo);
+}
+
+article img {
+	max-width: 100%;
+}
+
+article a.footnote-ref::before {
+	content: "[";
+}
+article a.footnote-ref::after {
+	content: "]";
+}
+
+article hr {
+	margin: 35px 0;
+}
+
+article > .sumario {
+	border: 1px solid var(--cor-borda-cinza);
+	border-radius: 10px;
+	padding: 20px;
+	margin-bottom: 20px;
+}
+article > .sumario > h2 {
+	margin-top: 0px;
+}
+
+
+
+
+.lista-pessoal {
+	width: 100%;
+	margin: 20px 0;
+	list-style: none;
+	display: grid;
+	gap: 20px;
+	grid-template-columns: 1fr 1fr;
+}
+
+.lista-pessoal > li.lista-pessoal-card-largo {
+	grid-column-end: span 2;
+}
+
+@media screen and (max-width: 700px) {
+	.lista-pessoal {
+		grid-template-columns: 1fr;
+	}
+}
+
+.card-pessoal {
+	margin: 0px;
+	padding: 0px;
+
+	font-family: "Montserrat", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+}
+
+.card-pessoal header {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.card-pessoal h3 {
+	margin: 0;
+}
+
+.card-pessoal ul {
+	list-style: none;
+	margin: 20px 0 0 0;
+}
+
+
+
+
+.container-imagem-principal {
+  background-color: #960D07;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.imagem-principal {
+  display: block;
+  padding: 0;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 800px;
+}
+
+
+#cadastrojs-formulario {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.cadastrojs-elemento {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.cadastrojs-elemento > input {
+	font-size: 100%;
+	border: 1px solid var(--cor-borda-cinza);
+	border-radius: 10px;
+	padding: 7px;
+}
+
+#cadastrojs-formulario > button {
+	font-size: 100%;
+	border: none;
+	border-radius: 10px;
+	padding: 7px;
+	background-color: var(--cor-ic2);
+	color: var(--cor-texto-branco);
+}
+
+#cadastrojs-problemas {
+	display: flex;
+	flex-direction: column;
+}
+
+#cadastrojs-problemas > p {
+	font-weight: 700;
+	font-size: 130%;
+}
+
+.noticia {
+	display: flex;
+	flex-direction: column;
+	text-decoration: inherit;
+	color: inherit;
+	border: 1px solid var(--cor-borda-cinza);
+	border-radius: 10px;
+	padding: 20px;
+	margin: 10px 0;
+}
+.noticia > h2 {
+	margin-top: 0px;
+	margin-bottom: 5px;
+}
+.noticia > h2 a {
+	color: inherit;
+}
+.noticia > small {
+	font-weight: 200;
+	margin-bottom: 10px;
+}
+
+.preview-noticia {
+  -webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+}
+
+
+/* ── Cards de projetos de extensão ─────────────────────────────────────── */
+
+.lista-extensoes {
+  width: 100%;
+  margin: 20px 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-extensao {
+  border: 1px solid var(--cor-borda-cinza);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: "Open Sans", sans-serif;
+}
+
+.card-extensao-concluido {
+  opacity: 0.75;
+}
+
+.card-extensao-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.card-extensao h3 {
+  margin: 0;
+  font-size: 120%;
+  color: var(--cor-ic1);
+  font-family: "Montserrat", sans-serif;
+}
+
+.extensao-area {
+  font-size: 82%;
+  background-color: var(--cor-ic2);
+  color: var(--cor-texto-branco);
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  font-family: "Montserrat", sans-serif;
+  flex-shrink: 0;
+}
+
+.extensao-descricao {
+  line-height: 1.55em;
+  margin: 0;
+}
+
+.extensao-metadados {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 5px 16px;
+  font-size: 93%;
+}
+
+.extensao-metadados dt {
+  font-weight: 700;
+  color: var(--cor-ic1);
+  font-family: "Montserrat", sans-serif;
+}
+
+.extensao-metadados dd {
+  margin: 0;
+}
+
+.sem-vagas {
+  color: #b03020;
+  font-weight: 600;
+}
+
+.extensao-perfil {
+  margin: 0;
+  font-size: 95%;
+  background-color: #f4f6fa;
+  border-left: 3px solid var(--cor-ic2);
+  padding: 8px 12px;
+  border-radius: 0 6px 6px 0;
+}
+
+.card-extensao-footer {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--cor-borda-cinza);
+  padding-top: 12px;
+  font-size: 93%;
+}
+
+.card-extensao-footer a {
+  color: var(--cor-ic1);
+  font-weight: 600;
+}
+

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Nova Oportunidade de Extensão — IC/UFRJ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+    <style type="text/css">
+        @media only screen and (max-width: 660px) {
+            .header-left,
+            .header-right {
+                display: block !important;
+                width: 100% !important;
+                text-align: center !important;
+            }
+            .header-left {
+                margin-bottom: 10px !important;
+            }
+        }
+    </style>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f6f9; font-family:'Montserrat', Arial, sans-serif;">
+
+<!--[if gte mso 9]>
+<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml"
+             xmlns:w="urn:schemas-microsoft-com:office:word"
+             style="width:700px; border-radius:20px;" arcsize="10%" stroke="false" fill="true">
+    <v:fill type="gradient" color="#003366" color2="#19856E" angle="90"/>
+    <v:textbox inset="1px,1px,1px,1px">
+<![endif]-->
+
+<!-- Container externo responsivo com borda degradê de 1px -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0"
+       style="margin:0; padding:24px 0; background-color:#f4f6f9;">
+    <tr>
+        <td align="center">
+            <!-- Tabela principal com borda degradê e cantos arredondados -->
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width:700px;
+          background: linear-gradient(90deg, #003366, #19856E);
+          border-radius:20px;
+          padding:1px;
+          margin:0 auto;
+          background-clip: padding-box;">
+                <tr>
+                    <td style="border-radius:19px; background-color:#ffffff;">
+                        <!-- Tabela interna com todo o conteúdo -->
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0"
+                               style="border-collapse:collapse;">
+
+                            <!-- HEADER -->
+                            <tr>
+                                <td style="background: linear-gradient(90deg, #003366 13%, #19856E 91%);
+                             padding:24px 55px;
+                             border-top-left-radius:19px;
+                             border-top-right-radius:19px;">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-size:0;">
+                                        <tr>
+                                            <!-- Coluna esquerda: Logotipo e subtítulo -->
+                                            <td class="header-left"
+                                                style="display:inline-block; vertical-align:top; width:50%; text-align:left;">
+                                                <p style="margin:0; font-size:33.9px; font-weight:800; line-height:34.89px; color:white;">
+                                                    IC<span style="font-weight:500;"> UFRJ</span>
+                                                </p>
+                                                <p style="margin:0; margin-top:4px; font-size:9.18px; font-weight:600; letter-spacing:0.46px; line-height:11.63px; color:white;">
+                                                    INSTITUTO DE <br>COMPUTAÇÃO
+                                                </p>
+                                            </td>
+                                            <!-- Coluna direita: Texto "extensão" -->
+                                            <td class="header-right"
+                                                style="display:inline-block; vertical-align:middle; width:50%; text-align:right; font-size:33.9px; font-weight:800; color:white;">
+                                                extensão
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- ETIQUETA DE MODALIDADE -->
+                            <tr>
+                                <td align="center" style="background-color:#ffffff; padding:26px 40px 0;">
+                                    <span style="display:inline-block; background:#e8f0fa; color:#003366; border-radius:20px; padding:5px 16px; font-size:12px; font-weight:700; letter-spacing:0.4px; text-transform:uppercase;">
+                                        {{ modalidade }}
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <!-- TÍTULO -->
+                            <tr>
+                                <td align="center"
+                                    style="background-color:#ffffff; padding:14px 40px 6px; font-size:22px; font-weight:700; line-height:31px; color:#222222;">
+                                    {{ titulo }}
+                                </td>
+                            </tr>
+
+                            <!-- CONTEÚDO -->
+                            <tr>
+                                <td style="background-color:#ffffff; padding:10px 40px 8px; font-size:14px; font-weight:400; color:#333333; line-height:23px; text-align:justify;">
+                                    {{ descricao_curta }}
+                                </td>
+                            </tr>
+
+                            <!-- METADADOS (coordenador, área, vagas, datas) -->
+                            <tr>
+                                <td style="background-color:#ffffff; padding:8px 40px 0; font-size:13px; color:#444444; line-height:22px;">
+                                    {% if coordenador %}
+                                    <p style="margin:4px 0;">👤 <strong>Coordenação:</strong> {{ coordenador }}</p>
+                                    {% endif %}
+                                    {% if area %}
+                                    <p style="margin:4px 0;">🏷️ <strong>Área:</strong> {{ area }}</p>
+                                    {% endif %}
+                                    {% if vagas %}
+                                    <p style="margin:4px 0;">🎯 <strong>Vagas:</strong> {{ vagas }}</p>
+                                    {% endif %}
+                                    {% if data_inicio_inscricoes %}
+                                    <p style="margin:4px 0;">📅 <strong>Inscrições a partir de:</strong> {{ data_inicio_inscricoes }}</p>
+                                    {% endif %}
+                                    {% if data_termino_inscricoes %}
+                                    <p style="margin:4px 0;">⏰ <strong>Inscrições até:</strong> {{ data_termino_inscricoes }}</p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                            <!-- CAIXA DE INFORMAÇÕES -->
+                            <tr>
+                                <td style="background-color:#ffffff; padding:18px 40px 8px;">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0"
+                                           style="background:#f8fafc; border-left:4px solid #19856E; border-radius:0 6px 6px 0;">
+                                        <tr>
+                                            <td style="padding:14px 18px; font-size:13px; color:#333333; line-height:22px;">
+                                                {% if como_inscrever %}
+                                                <p style="margin:4px 0;"><strong style="color:#003366;">Como se inscrever:</strong> {{ como_inscrever }}</p>
+                                                {% endif %}
+                                                {% if contato %}
+                                                <p style="margin:4px 0;"><strong style="color:#003366;">Contato:</strong> {{ contato }}</p>
+                                                {% endif %}
+                                                {% if email_atendimento %}
+                                                <p style="margin:4px 0;"><strong style="color:#003366;">E-mail:</strong> <a href="mailto:{{ email_atendimento }}" style="color:#19856E;">{{ email_atendimento }}</a></p>
+                                                {% endif %}
+                                                {% if telefone %}
+                                                <p style="margin:4px 0;"><strong style="color:#003366;">Telefone:</strong> {{ telefone }}</p>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- BOTÃO DE AÇÃO -->
+                            {% if link_inscricoes %}
+                            <tr>
+                                <td align="center" style="background-color:#ffffff; padding:22px 40px 30px;">
+                                    <a href="{{ link_inscricoes }}"
+                                       style="background: linear-gradient(90deg, #003366, #19856E); color:#ffffff; text-decoration:none; padding:14px 36px; border-radius:8px; font-size:15px; font-weight:700; display:inline-block;">
+                                        Inscreva-se agora →
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endif %}
+
+                            <!-- RODAPÉ -->
+                            <tr>
+                                <td align="center"
+                                    style="background-color:#ffffff; padding:20px 40px 10px; font-size:11px; font-weight:600; color:#222222; line-height:1.4;">
+                                    <span style="color:#222222;">Instituto de Computação</span><br>
+                                    <span style="color:#222222;">Universidade Federal do Rio de Janeiro</span><br>
+                                    <span style="color:#222222;"><a href="https://www.ic.ufrj.br" style="color:#19856E;">www.ic.ufrj.br</a></span>
+                                </td>
+                            </tr>
+
+                            <!-- SEPARADOR (linha horizontal com degradê) -->
+                            <tr>
+                                <td>
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td style="height:2px;">
+                                                <div
+                                                    style="width:100%; height:1px; background: linear-gradient(to right, #003366 50%, #19856E 50%);"></div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- DISCLAIMER -->
+                            <tr>
+                                <td align="center"
+                                    style="background-color:#ffffff; padding:20px 40px; font-size:10px; font-weight:600; line-height:15px; color:rgba(34,34,34,0.6); text-align:center; border-bottom-left-radius:19px; border-bottom-right-radius:19px;">
+                                    Você recebeu este e-mail por estar cadastrado na lista de divulgação de extensões do IC/UFRJ.<br>
+                                    Para se descadastrar, <a href="{{ link_descadastro }}" style="color:rgba(34,34,34,0.6);">clique aqui</a>.
+                                </td>
+                            </tr>
+
+                        </table>
+                        <!-- Fim da Tabela interna -->
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<!--[if gte mso 9]>
+</v:textbox>
+</v:roundrect>
+<![endif]-->
+</body>
+</html>
