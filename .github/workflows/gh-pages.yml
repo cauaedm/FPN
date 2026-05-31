@@ -43,6 +43,10 @@ jobs:
 
       - name: Build site
         # base_url é detectado automaticamente (ex.: https://usuario.github.io/repo/)
+        # HUGO_CANONIFYURLS prefixa caminhos absolutos (/css, /img...) com o baseURL,
+        # necessário porque o Pages serve sob subpasta (/FPN/). Escopo só do demo.
+        env:
+          HUGO_CANONIFYURLS: "true"
         run: hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
 
       - name: Upload artifact
