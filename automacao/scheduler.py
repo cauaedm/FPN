@@ -47,8 +47,10 @@ def iniciar_scheduler(cron: dict = None):
     signal.signal(signal.SIGTERM, lambda s, f: _shutdown(scheduler, s, f))
     signal.signal(signal.SIGINT, lambda s, f: _shutdown(scheduler, s, f))
 
-    proxima = scheduler.get_job("verificar_projetos").next_run_time
-    logger.info("Scheduler iniciado. Próxima execução: %s", proxima)
+    # next_run_time só é preenchido depois de start() (Job usa __slots__);
+    # antes disso o atributo nem existe, então lemos de forma defensiva.
+    proxima = getattr(scheduler.get_job("verificar_projetos"), "next_run_time", None)
+    logger.info("Scheduler iniciado. Próxima execução: %s", proxima or "(definida ao iniciar)")
     logger.info("Cron configurado: %s", cron)
 
     scheduler.start()
