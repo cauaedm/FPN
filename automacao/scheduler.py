@@ -68,6 +68,10 @@ if __name__ == "__main__":
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
+    # Garante que as tabelas existam (volume novo do Railway começa vazio).
+    from db import storage
+    storage.inicializar()
+
     if "--once" in sys.argv:
         logger.info("Modo --once: executando ciclo único.")
         executar_ciclo()

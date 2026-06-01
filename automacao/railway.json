@@ -5,8 +5,8 @@
     "dockerfilePath": "Dockerfile"
   },
   "deploy": {
-    "startCommand": "python scheduler.py",
-    "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10
+    "startCommand": "python scheduler.py --once",
+    "cronSchedule": "0 12 * * 1,4",
+    "restartPolicyType": "NEVER"
   }
 }

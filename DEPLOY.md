@@ -68,15 +68,18 @@ Dois alvos, ambos no plano gratuito:
    - **Mount path:** `/app/data`
    - Assim o `fpn.db` (lista do que já foi notificado) sobrevive a reinícios/deploys.
 
-6. **Deploy.** O worker fica ligado e o APScheduler dispara seg/qui às 9h (BRT).
+6. **Deploy.** O serviço está configurado como **Cron Job** (via `railway.json`):
+   acorda seg/qui às **12h UTC = 9h BRT** (`cronSchedule: "0 12 * * 1,4"`),
+   roda `python scheduler.py --once` (um único ciclo) e encerra. O Volume em
+   `/app/data` mantém o `fpn.db` entre as execuções, evitando reenvios.
    - Para testar na hora, abra o serviço → **... → Shell/Run** e rode:
      `python main.py --testar`
    - Cadastre destinatários de e-mail via shell:
      `python main.py --assinantes add email fulano@exemplo.com`
 
-> 💡 **Economia (opcional):** como o disparo é só 2x/semana, dá para trocar o worker
-> sempre-ligado por um **Cron Job do Railway**: start command `python scheduler.py --once`
-> e *Cron Schedule* `0 12 * * 1,4` (12h UTC = 9h BRT). Mantenha o Volume mesmo assim.
+> 💡 **Quer o worker sempre-ligado?** Troque no `railway.json` o `startCommand`
+> para `python scheduler.py` e remova `cronSchedule` — aí o APScheduler dispara
+> internamente, mas o container consome horas o tempo todo.
 
 ---
 

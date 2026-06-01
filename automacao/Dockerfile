@@ -15,7 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copia o restante do código
 COPY . .
 
-# Worker sempre-ligado: o APScheduler dispara nos horários configurados.
-# O banco fica em /app/data — monte um Volume do Railway nesse caminho
-# para que os envios já feitos persistam entre reinícios/deploys.
-CMD ["python", "scheduler.py"]
+# Cron Job do Railway: o container acorda no cronSchedule (railway.json),
+# roda um único ciclo e encerra. O banco fica em /app/data — monte um Volume
+# do Railway nesse caminho para que os envios já feitos persistam entre execuções.
+CMD ["python", "scheduler.py", "--once"]
