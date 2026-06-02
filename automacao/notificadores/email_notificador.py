@@ -119,8 +119,8 @@ class EmailNotificador:
 
         return msg
 
-    def enviar(self, destino: str, projeto: Projeto) -> bool:
-        """Envia e-mail para um único destinatário. Retorna True se bem-sucedido."""
+    def enviar_detalhado(self, destino: str, projeto: Projeto) -> tuple[bool, str]:
+        """Envia e retorna (sucesso, mensagem_de_erro). Erro vazio em caso de sucesso."""
         msg = self._criar_mensagem(destino, projeto)
         try:
             if self.use_ssl:
@@ -136,11 +136,15 @@ class EmailNotificador:
                     smtp.sendmail(self.from_addr, destino, msg.as_string())
 
             logger.info("E-mail enviado para %s — %s", destino, projeto.titulo)
-            return True
+            return True, ""
 
         except Exception as exc:  # SMTP, conexão, DNS, TLS — não deixa quebrar o request
             logger.error("Erro ao enviar e-mail para %s: %s", destino, exc)
-            return False
+            return False, str(exc)
+
+    def enviar(self, destino: str, projeto: Projeto) -> bool:
+        """Envia e-mail para um único destinatário. Retorna True se bem-sucedido."""
+        return self.enviar_detalhado(destino, projeto)[0]
 
     def _enviar_raw(self, destino: str, msg: MIMEMultipart) -> bool:
         try:

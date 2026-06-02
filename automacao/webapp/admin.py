@@ -248,17 +248,22 @@ def _divulgar_projeto(p) -> dict:
             if not dest:
                 res["email"] = "nenhum assinante cadastrado"
             else:
-                r = notif.enviar_para_lista(dest, p)
-                for d, ok in r.items():
-                    storage.registrar_envio(p.id, "email", d, ok)
-                enviados = sum(1 for ok in r.values() if ok)
-                if enviados == len(r):
+                enviados = 0
+                ultimo_erro = ""
+                for d in dest:
+                    ok, erro = notif.enviar_detalhado(d, p)
+                    storage.registrar_envio(p.id, "email", d, ok, erro)
+                    if ok:
+                        enviados += 1
+                    elif erro:
+                        ultimo_erro = erro
+                if enviados == len(dest):
                     storage.marcar_notificado(p.id, "email")
                     res["email"] = f"enviado p/ {enviados} assinante(s)"
                 elif enviados:
-                    res["email"] = f"parcial: {enviados}/{len(r)} (ver logs)"
+                    res["email"] = f"parcial: {enviados}/{len(dest)} — {ultimo_erro}"
                 else:
-                    res["email"] = "falha no envio (ver logs)"
+                    res["email"] = f"falha: {ultimo_erro or 'ver logs'}"
 
     # Telegram (chat_ids da env)
     if storage.ja_notificado(p.id, "telegram"):
