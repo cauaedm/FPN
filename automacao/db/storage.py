@@ -48,6 +48,26 @@ def inicializar():
                 erro        TEXT,
                 enviado_em  TEXT NOT NULL DEFAULT (datetime('now'))
             );
+
+            -- Submissões de extensões externas (RF05-RF09).
+            -- status: pendente | verificado | aprovado | rejeitado
+            CREATE TABLE IF NOT EXISTS submissoes (
+                id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome_extensao       TEXT NOT NULL,
+                descricao           TEXT NOT NULL,
+                perfil_desejado     TEXT,
+                bolsa               INTEGER NOT NULL DEFAULT 0,
+                processo_seletivo   TEXT,
+                contato             TEXT,
+                link_siga           TEXT,
+                coordenador_nome    TEXT,
+                coordenador_email   TEXT,
+                status              TEXT NOT NULL DEFAULT 'pendente',
+                verificado_siga     INTEGER NOT NULL DEFAULT 0,
+                motivo_rejeicao     TEXT,
+                criado_em           TEXT NOT NULL DEFAULT (datetime('now')),
+                decidido_em         TEXT
+            );
         """)
     logger.info("Banco inicializado em: %s", DB_PATH)
 
@@ -111,3 +131,87 @@ def registrar_envio(projeto_id: str, canal: str, destino: str, sucesso: bool, er
                VALUES (?, ?, ?, ?, ?)""",
             (projeto_id, canal, destino, int(sucesso), erro),
         )
+
+
+def listar_log_envios(limite: int = 100) -> list[dict]:
+    with _connect() as conn:
+        rows = conn.execute(
+            "SELECT * FROM log_envios ORDER BY id DESC LIMIT ?",
+            (limite,),
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+# ── Submissões de extensões externas (RF05-RF09) ──────────────────────────────
+
+def criar_submissao(dados: dict) -> int:
+    """Cria uma submissão com status 'pendente'. Retorna o id gerado."""
+    with _connect() as conn:
+        cur = conn.execute(
+            """INSERT INTO submissoes
+                 (nome_extensao, descricao, perfil_desejado, bolsa,
+                  processo_seletivo, contato, link_siga,
+                  coordenador_nome, coordenador_email)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (
+                dados["nome_extensao"],
+                dados["descricao"],
+                dados.get("perfil_desejado"),
+                int(bool(dados.get("bolsa"))),
+                dados.get("processo_seletivo"),
+                dados.get("contato"),
+                dados.get("link_siga"),
+                dados.get("coordenador_nome"),
+                dados.get("coordenador_email"),
+            ),
+        )
+        novo_id = cur.lastrowid
+    logger.info("Submissão criada: #%s — %s", novo_id, dados.get("nome_extensao"))
+    return novo_id
+
+
+def listar_submissoes(status: str = None) -> list[dict]:
+    with _connect() as conn:
+        if status:
+            rows = conn.execute(
+                "SELECT * FROM submissoes WHERE status=? ORDER BY id DESC",
+                (status,),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT * FROM submissoes ORDER BY id DESC"
+            ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def obter_submissao(submissao_id: int) -> dict | None:
+    with _connect() as conn:
+        row = conn.execute(
+            "SELECT * FROM submissoes WHERE id=?", (submissao_id,)
+        ).fetchone()
+    return dict(row) if row else None
+
+
+def decidir_submissao(
+    submissao_id: int,
+    status: str,
+    verificado_siga: bool = None,
+    motivo_rejeicao: str = None,
+):
+    """Atualiza o status de uma submissão (verificado/aprovado/rejeitado)."""
+    campos = ["status=?", "decidido_em=?"]
+    valores = [status, datetime.utcnow().isoformat()]
+    if verificado_siga is not None:
+        campos.append("verificado_siga=?")
+        valores.append(int(verificado_siga))
+    if motivo_rejeicao is not None:
+        campos.append("motivo_rejeicao=?")
+        valores.append(motivo_rejeicao)
+    valores.append(submissao_id)
+
+    with _connect() as conn:
+        conn.execute(
+            f"UPDATE submissoes SET {', '.join(campos)} WHERE id=?",
+            valores,
+        )
+    logger.info("Submissão #%s → %s", submissao_id, status)

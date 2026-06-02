@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Automações &amp; banco</h1>
+{% if msg %}<p class="msg">{{ msg }}</p>{% endif %}
+
+<div class="card">
+  <h3>Ciclo de notificação</h3>
+  <p class="muted">Busca projetos do IC no SIGA e notifica os novos pelos canais configurados.
+  O agendador roda automaticamente seg/qui às 9h (BRT); aqui você dispara na hora.</p>
+  <form method="post" action="/admin/automacoes/rodar-ciclo">
+    <button type="submit">Rodar ciclo agora</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Assinantes de e-mail</h3>
+  {% if assinantes_email %}
+    <ul>{% for a in assinantes_email %}<li>{{ a }}</li>{% endfor %}</ul>
+  {% else %}
+    <p class="muted">Nenhum assinante de e-mail cadastrado.</p>
+  {% endif %}
+  <form method="post" action="/admin/automacoes/assinante" style="margin-top:10px;">
+    <input type="hidden" name="canal" value="email">
+    <input type="email" name="destino" placeholder="email@exemplo.com" required style="max-width:320px; display:inline-block;">
+    <button name="acao" value="add" type="submit">Adicionar</button>
+    <button name="acao" value="remove" type="submit" class="danger">Remover</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Últimos envios (log)</h3>
+  {% if logs %}
+  <table>
+    <thead><tr><th>Quando</th><th>Canal</th><th>Destino</th><th>Projeto</th><th>OK</th></tr></thead>
+    <tbody>
+      {% for l in logs %}
+      <tr>
+        <td class="muted">{{ l.enviado_em[:16] }}</td>
+        <td>{{ l.canal }}</td>
+        <td>{{ l.destino }}</td>
+        <td>{{ l.projeto_id }}</td>
+        <td>{{ "✓" if l.sucesso else "✗" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="muted">Nenhum envio registrado ainda.</p>
+  {% endif %}
+</div>
+{% endblock %}

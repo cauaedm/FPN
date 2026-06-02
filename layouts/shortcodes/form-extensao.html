@@ -1,0 +1,93 @@
+{{- /* Formulário de solicitação de divulgação de extensão externa (RF05).
+       Envia JSON para {apiBase}/api/submissoes. */ -}}
+{{- with .Site.Params.apiBase -}}
+<form id="form-extensao" class="form-extensao" data-api="{{ . }}">
+  <p>
+    <label>Nome da extensão *<br>
+      <input type="text" name="nome_extensao" required minlength="3"></label>
+  </p>
+  <p>
+    <label>Descrição *<br>
+      <textarea name="descricao" rows="4" required minlength="10"></textarea></label>
+  </p>
+  <p>
+    <label>Perfil de aluno desejado<br>
+      <input type="text" name="perfil_desejado" placeholder="Ex.: desenvolvimento web, análise de dados"></label>
+  </p>
+  <p>
+    <label><input type="checkbox" name="bolsa"> Oferece bolsa</label>
+  </p>
+  <p>
+    <label>Processo seletivo<br>
+      <input type="text" name="processo_seletivo" placeholder="Ex.: entrevista, análise de currículo"></label>
+  </p>
+  <p>
+    <label>Link do SIGA *<br>
+      <input type="url" name="link_siga" required placeholder="https://portal.extensao.ufrj.br/..."></label>
+  </p>
+  <div class="form-extensao-grid">
+    <p>
+      <label>Nome do coordenador *<br>
+        <input type="text" name="coordenador_nome" required></label>
+    </p>
+    <p>
+      <label>E-mail do coordenador *<br>
+        <input type="email" name="coordenador_email" required></label>
+    </p>
+  </div>
+  <p>
+    <label>Contato para divulgação<br>
+      <input type="text" name="contato" placeholder="e-mail ou telefone exibido aos alunos"></label>
+  </p>
+  {{- /* honeypot anti-spam: invisível para humanos */ -}}
+  <input type="text" name="website" tabindex="-1" autocomplete="off"
+         style="position:absolute;left:-9999px;" aria-hidden="true">
+
+  <button type="submit">Enviar solicitação</button>
+  <p id="form-extensao-msg" role="status" aria-live="polite"></p>
+</form>
+
+<script>
+(function () {
+  var form = document.getElementById("form-extensao");
+  if (!form) return;
+  var api = (form.dataset.api || "").replace(/\/$/, "");
+  var msg = document.getElementById("form-extensao-msg");
+
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var fd = new FormData(form);
+    var payload = {
+      nome_extensao: fd.get("nome_extensao"),
+      descricao: fd.get("descricao"),
+      perfil_desejado: fd.get("perfil_desejado") || null,
+      bolsa: fd.get("bolsa") === "on",
+      processo_seletivo: fd.get("processo_seletivo") || null,
+      contato: fd.get("contato") || null,
+      link_siga: fd.get("link_siga") || null,
+      coordenador_nome: fd.get("coordenador_nome") || null,
+      coordenador_email: fd.get("coordenador_email") || null,
+      website: fd.get("website") || ""
+    };
+    msg.textContent = "Enviando…";
+    fetch(api + "/api/submissoes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    }).then(function () {
+      form.reset();
+      msg.textContent = "Solicitação enviada! O Comitê de Extensão fará a análise.";
+    }).catch(function (err) {
+      msg.textContent = "Não foi possível enviar agora. Tente novamente mais tarde.";
+      if (window.console) console.error(err);
+    });
+  });
+})();
+</script>
+{{- else -}}
+<p><em>O formulário de submissão está temporariamente indisponível
+(serviço não configurado).</em></p>
+{{- end -}}

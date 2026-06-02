@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Submissões de extensões externas</h1>
+
+<p class="muted">
+  Filtrar:
+  <a href="/admin">todas</a> ·
+  <a href="/admin?status=pendente">pendentes ({{ contagem.pendente }})</a> ·
+  <a href="/admin?status=verificado">verificadas ({{ contagem.verificado }})</a> ·
+  <a href="/admin?status=aprovado">aprovadas ({{ contagem.aprovado }})</a> ·
+  <a href="/admin?status=rejeitado">rejeitadas ({{ contagem.rejeitado }})</a>
+</p>
+
+{% if submissoes %}
+<table>
+  <thead>
+    <tr><th>#</th><th>Extensão</th><th>Coordenador</th><th>Recebida</th><th>Status</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for s in submissoes %}
+    <tr>
+      <td>{{ s.id }}</td>
+      <td>{{ s.nome_extensao }}</td>
+      <td>{{ s.coordenador_nome or "—" }}</td>
+      <td class="muted">{{ s.criado_em[:16] }}</td>
+      <td><span class="tag {{ s.status }}">{{ s.status }}</span></td>
+      <td><a href="/admin/submissao/{{ s.id }}">abrir →</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Nenhuma submissão{% if filtro %} com status "{{ filtro }}"{% endif %}.</p>
+{% endif %}
+{% endblock %}

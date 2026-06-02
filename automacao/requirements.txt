@@ -7,6 +7,12 @@ python-dotenv>=1.0.0
 # Agendador de tarefas
 APScheduler>=3.10.4
 
+# Web service: formulário (RF05), API consolidada (RF11/12) e painel do Comitê
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+jinja2>=3.1.4
+python-multipart>=0.0.9
+
 # (Opcional) Twilio para WhatsApp — descomente se usar backend Twilio
 # twilio>=9.0.0
 

@@ -40,4 +40,7 @@ privacy:
 params:
   images:
   - /img/parede-vermelha.jpg
+  # URL pública do web service no Railway (API de extensões + submissões).
+  # Deixe vazio para usar a listagem estática (data/extensoes.yaml) como fallback.
+  apiBase: ""
 

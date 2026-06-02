@@ -66,20 +66,52 @@ def _eh_ic(acao: dict) -> bool:
     return any(kw in unidade for kw in IC_KEYWORDS)
 
 
+def _buscar_dados() -> list[dict]:
+    """Faz a requisição à API do portal e devolve a lista bruta de ações."""
+    logger.info("Buscando projetos na API: %s", URL_API)
+    req = urllib.request.Request(URL_API, headers={"User-Agent": "FPN-IC-Bot/1.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except Exception as exc:
+        logger.error("Erro ao buscar API: %s", exc)
+        raise
+
+
+def buscar_acao_por(link: str = None, email: str = None) -> Optional[dict]:
+    """
+    Procura uma ação no SIGA por link de inscrição ou e-mail (coordenador /
+    atendimento / contato). Usada na conferência manual do Comitê (RF06).
+    Retorna a ação bruta da API ou None.
+    """
+    link_norm = (link or "").strip().rstrip("/").lower()
+    email_norm = _normalizar(email or "")
+    if not link_norm and not email_norm:
+        return None
+
+    for acao in _buscar_dados():
+        if link_norm:
+            acao_link = (acao.get("link_inscricoes") or "").strip().rstrip("/").lower()
+            if acao_link and acao_link == link_norm:
+                return acao
+        if email_norm:
+            campos = (
+                acao.get("email"),
+                acao.get("email_atendimento"),
+                acao.get("contato"),
+                acao.get("coordenador"),
+            )
+            if any(email_norm in _normalizar(c or "") for c in campos):
+                return acao
+    return None
+
+
 def buscar_projetos_ic(apenas_com_vagas: bool = False) -> list[Projeto]:
     """
     Busca todos os projetos ativos do IC na API do portal.extensao.ufrj.br.
     Retorna lista de Projeto.
     """
-    logger.info("Buscando projetos na API: %s", URL_API)
-    req = urllib.request.Request(URL_API, headers={"User-Agent": "FPN-IC-Bot/1.0"})
-
-    try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            dados = json.loads(resp.read().decode("utf-8"))
-    except Exception as exc:
-        logger.error("Erro ao buscar API: %s", exc)
-        raise
+    dados = _buscar_dados()
 
     logger.info("Total de projetos recebidos: %d", len(dados))
 

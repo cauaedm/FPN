@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Comitê de Extensão — IC/UFRJ{% endblock %}</title>
+  <style>
+    :root { --ic1:#344563; --ic2:#667DA6; --borda:#d6dae0; }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+           margin:0; color:#1a1a1a; background:#f4f6f9; }
+    header { background:var(--ic1); color:#fff; padding:14px 22px; }
+    header a { color:#cfd8e6; text-decoration:none; margin-right:18px; font-size:14px; }
+    header a:hover { color:#fff; }
+    main { max-width:980px; margin:24px auto; padding:0 18px; }
+    h1 { font-size:22px; color:var(--ic1); }
+    table { width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--borda); }
+    th, td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--borda); font-size:14px; }
+    th { background:#eef1f5; }
+    .tag { display:inline-block; padding:2px 9px; border-radius:10px; font-size:12px; font-weight:600; }
+    .pendente { background:#fff3cd; color:#7a5b00; }
+    .verificado { background:#cfe2ff; color:#1c4587; }
+    .aprovado { background:#d1e7dd; color:#0f5132; }
+    .rejeitado { background:#f8d7da; color:#842029; }
+    .card { background:#fff; border:1px solid var(--borda); border-radius:8px; padding:18px; margin-bottom:16px; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    dt { font-weight:600; color:var(--ic1); font-size:13px; margin-top:8px; }
+    dd { margin:0 0 4px 0; }
+    button, input[type=submit] { background:var(--ic1); color:#fff; border:0; padding:8px 14px;
+            border-radius:6px; cursor:pointer; font-size:14px; }
+    button.danger { background:#b02a37; }
+    input[type=text], input[type=email], textarea { width:100%; padding:7px; border:1px solid var(--borda);
+            border-radius:6px; font-size:14px; }
+    .msg { background:#d1e7dd; color:#0f5132; padding:10px 14px; border-radius:6px; margin-bottom:14px; }
+    .muted { color:#667; font-size:13px; }
+    form.inline { display:inline; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Comitê de Extensão · IC/UFRJ</strong>
+    <nav style="margin-top:6px;">
+      <a href="/admin">Submissões</a>
+      <a href="/admin/automacoes">Automações</a>
+    </nav>
+  </header>
+  <main>{% block content %}{% endblock %}</main>
+</body>
+</html>

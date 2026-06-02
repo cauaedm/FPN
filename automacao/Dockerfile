@@ -15,7 +15,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copia o restante do código
 COPY . .
 
-# Cron Job do Railway: o container acorda no cronSchedule (railway.json),
-# roda um único ciclo e encerra. O banco fica em /app/data — monte um Volume
-# do Railway nesse caminho para que os envios já feitos persistam entre execuções.
-CMD ["python", "scheduler.py", "--once"]
+# Web service sempre-ligado: serve o formulário (RF05), a API consolidada
+# (RF11/12) e o painel do Comitê (RF06-09); o APScheduler roda em background
+# dentro do app (ciclo SIGA seg/qui 9h). O banco fica em /app/data — monte um
+# Volume do Railway nesse caminho para persistir submissões/assinantes/dedup.
+EXPOSE 8080
+CMD ["sh", "-c", "uvicorn webapp.app:app --host 0.0.0.0 --port ${PORT:-8080}"]

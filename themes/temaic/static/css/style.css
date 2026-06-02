@@ -818,6 +818,75 @@ article > .sumario > h2 {
 
 /* ── Cards de projetos de extensão ─────────────────────────────────────── */
 
+.extensoes-controles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.extensoes-controles input[type="search"] {
+  flex: 1 1 280px;
+  padding: 9px 12px;
+  border: 1px solid var(--cor-borda-cinza);
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.extensoes-status {
+  color: var(--cor-borda-cinza);
+  margin: 20px 0;
+}
+
+.form-extensao {
+  max-width: 640px;
+  margin: 20px 0;
+}
+
+.form-extensao label {
+  font-weight: 600;
+  color: var(--cor-ic1);
+}
+
+.form-extensao input[type="text"],
+.form-extensao input[type="email"],
+.form-extensao input[type="url"],
+.form-extensao textarea {
+  width: 100%;
+  margin-top: 4px;
+  padding: 9px 12px;
+  border: 1px solid var(--cor-borda-cinza);
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.form-extensao .form-extensao-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-extensao button {
+  background: var(--cor-ic1);
+  color: #fff;
+  border: 0;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+#form-extensao-msg {
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 600px) {
+  .form-extensao .form-extensao-grid { grid-template-columns: 1fr; }
+}
+
 .lista-extensoes {
   width: 100%;
   margin: 20px 0;

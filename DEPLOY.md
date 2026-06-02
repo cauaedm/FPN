@@ -61,25 +61,38 @@ Dois alvos, ambos no plano gratuito:
    CRON_DAY_OF_WEEK=mon,thu
    CRON_HOUR=9
    CRON_MINUTE=0
+   COMITE_USER=comite
+   COMITE_PASSWORD=...           (senha do painel do Comitê)
+   ALLOWED_ORIGIN=https://cauaedm.github.io   (origem do site p/ CORS)
    ```
 
-5. **Volume para o banco** (importante p/ não reenviar notificações):
+5. **Volume para o banco** (importante p/ não perder submissões/assinantes):
    - Aba do serviço → **Volumes → New Volume**
    - **Mount path:** `/app/data`
-   - Assim o `fpn.db` (lista do que já foi notificado) sobrevive a reinícios/deploys.
+   - Assim o `fpn.db` (submissões, assinantes e dedup de notificações) sobrevive a reinícios/deploys.
 
-6. **Deploy.** O serviço está configurado como **Cron Job** (via `railway.json`):
-   acorda seg/qui às **12h UTC = 9h BRT** (`cronSchedule: "0 12 * * 1,4"`),
-   roda `python scheduler.py --once` (um único ciclo) e encerra. O Volume em
-   `/app/data` mantém o `fpn.db` entre as execuções, evitando reenvios.
-   - Para testar na hora, abra o serviço → **... → Shell/Run** e rode:
-     `python main.py --testar`
-   - Cadastre destinatários de e-mail via shell:
-     `python main.py --assinantes add email fulano@exemplo.com`
+6. **Deploy.** O serviço agora é um **web service sempre-ligado** (`railway.json` →
+   `uvicorn webapp.app:app`). Ele serve:
+   - `GET /api/extensoes` — lista consolidada (SIGA-IC + externas aprovadas), consumida pelo site.
+   - `POST /api/submissoes` — recebe o formulário de submissão (RF05).
+   - `/admin` — painel do Comitê (RF06-09), protegido por `COMITE_USER`/`COMITE_PASSWORD`.
+   - `/healthz` — health check.
 
-> 💡 **Quer o worker sempre-ligado?** Troque no `railway.json` o `startCommand`
-> para `python scheduler.py` e remova `cronSchedule` — aí o APScheduler dispara
-> internamente, mas o container consome horas o tempo todo.
+   O APScheduler roda **em background dentro do app** (ciclo SIGA seg/qui 9h BRT),
+   substituindo o antigo cron job. Gere um **Domínio público** (Settings → Networking →
+   Generate Domain) e use essa URL no site.
+
+7. **Conectar o site à API.** No `config.yaml` do site, defina:
+   ```yaml
+   params:
+     apiBase: "https://SEU-APP.up.railway.app"
+   ```
+   Faça commit/push — o GitHub Pages recompila e a página *Projetos de Extensão* passa a
+   carregar a lista da API, e *Submeter Extensão Externa* passa a enviar para o backend.
+   (Com `apiBase` vazio, o site usa a listagem estática de `data/extensoes.yaml` como fallback.)
+
+> ⚠️ Diferente do cron anterior, o web service consome horas continuamente (precisa estar
+> 24/7 para servir o formulário e o painel). No plano gratuito, fique de olho no uso.
 
 ---
 

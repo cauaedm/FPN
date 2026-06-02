@@ -1,3 +1,22 @@
+{{- /*
+  Listagem de extensões.
+  - Se o site param `apiBase` estiver definido, busca a lista consolidada
+    (SIGA-IC + externas aprovadas) da API em runtime via JS (RF11/RF12/RF14).
+  - Caso contrário, cai no fallback estático a partir de data/extensoes.yaml.
+*/ -}}
+
+{{- if .Site.Params.apiBase -}}
+<div class="extensoes-controles">
+  <input type="search" id="extensoes-busca" placeholder="Buscar por nome, área, palavra-chave…" aria-label="Buscar extensões">
+  <label><input type="checkbox" id="filtro-vagas"> Só com vagas</label>
+  <label><input type="checkbox" id="filtro-bolsa"> Só com bolsa</label>
+</div>
+<div id="lista-extensoes" data-api="{{ .Site.Params.apiBase }}">
+  <p class="extensoes-status">Carregando extensões…</p>
+</div>
+<script src="{{ "js/extensoes.js" | relURL }}" defer></script>
+
+{{- else -}}
 {{- $data := slice -}}
 {{- range $key, $value := .Site.Data.extensoes -}}
   {{- $item := merge (dict "chave" $key) $value -}}
@@ -114,3 +133,4 @@
 {{ if and (not $ativos) (not $concluidos) }}
 <p>Nenhum projeto cadastrado ainda.</p>
 {{ end }}
+{{- end -}}

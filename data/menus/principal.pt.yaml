@@ -76,6 +76,8 @@
     - children:
       - name: Projetos de Extensão
         url: /info/projetos-extensao/
+      - name: Submeter Extensão Externa
+        url: /info/submeter-extensao/
 
 - name: Pós-Graduação
   children:

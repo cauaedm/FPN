@@ -142,6 +142,36 @@ class EmailNotificador:
             logger.error("Erro ao enviar e-mail para %s: %s", destino, exc)
             return False
 
+    def _enviar_raw(self, destino: str, msg: MIMEMultipart) -> bool:
+        try:
+            if self.use_ssl:
+                context = ssl.create_default_context()
+                with smtplib.SMTP_SSL(self.host, self.port, context=context) as smtp:
+                    smtp.login(self.user, self.password)
+                    smtp.sendmail(self.from_addr, destino, msg.as_string())
+            else:
+                with smtplib.SMTP(self.host, self.port) as smtp:
+                    if self.use_tls:
+                        smtp.starttls(context=ssl.create_default_context())
+                    smtp.login(self.user, self.password)
+                    smtp.sendmail(self.from_addr, destino, msg.as_string())
+            return True
+        except smtplib.SMTPException as exc:
+            logger.error("Erro ao enviar e-mail para %s: %s", destino, exc)
+            return False
+
+    def enviar_texto(self, destino: str, assunto: str, corpo: str) -> bool:
+        """Envia um e-mail de texto livre (ex.: aviso de rejeição — RF09)."""
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = assunto
+        msg["From"] = self.from_addr
+        msg["To"] = destino
+        msg.attach(MIMEText(corpo, "plain", "utf-8"))
+        ok = self._enviar_raw(destino, msg)
+        if ok:
+            logger.info("E-mail (texto) enviado para %s — %s", destino, assunto)
+        return ok
+
     def enviar_para_lista(
         self, destinatarios: list[str], projeto: Projeto
     ) -> dict[str, bool]:
