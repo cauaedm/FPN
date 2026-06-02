@@ -866,6 +866,13 @@ article > .sumario > h2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+  align-items: start;
+}
+
+/* Zera a margem dos <p> no grid (o tema aplica margin-top em "p + p",
+   o que desalinhava a coluna do e-mail em relação à do nome). */
+.form-extensao .form-extensao-grid p {
+  margin: 0;
 }
 
 .form-extensao button {
