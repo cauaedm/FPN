@@ -25,6 +25,7 @@
   <thead>
     <tr>
       <th>Extensão</th>
+      <th>Origem</th>
       <th>Coordenador</th>
       <th>Inscrições</th>
       {% for c in canais %}<th>{{ c }}</th>{% endfor %}
@@ -37,7 +38,11 @@
     <tr>
       <td>
         {{ p.titulo }}
-        {% if p.link_inscricoes %}<br><a href="{{ p.link_inscricoes }}" target="_blank" rel="noopener" class="muted">link SIGA →</a>{% endif %}
+        {% if p.link_inscricoes %}<br><a href="{{ p.link_inscricoes }}" target="_blank" rel="noopener" class="muted">link →</a>{% endif %}
+      </td>
+      <td>
+        {% if it.origem == "externa" %}<span class="tag verificado">externa</span>
+        {% else %}<span class="tag" style="background:#eef1f5;color:#344563;">portal</span>{% endif %}
       </td>
       <td>{{ p.coordenador or "—" }}</td>
       <td class="muted">{{ p.data_inicio_inscricoes or "?" }} → {{ p.data_termino_inscricoes or "?" }}</td>

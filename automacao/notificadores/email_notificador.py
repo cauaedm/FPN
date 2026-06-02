@@ -1,11 +1,19 @@
 """
-Notificador por e-mail institucional (SMTP).
-Suporta SMTP com STARTTLS (porta 587) e SSL (porta 465).
+Notificador por e-mail.
+
+Dois backends, escolhidos por EMAIL_BACKEND:
+  - "smtp"  (padrão): SMTP com STARTTLS (587) ou SSL (465).
+  - "resend": API HTTP da Resend (porta 443) — usar quando o host bloqueia SMTP
+              de saída (ex.: Railway no plano gratuito).
 """
 
+import json
 import logging
+import os
 import smtplib
 import ssl
+import urllib.error
+import urllib.request
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
@@ -44,6 +52,17 @@ class SimpleTemplate:
             if not skip:
                 lines.append(line)
         return "\n".join(lines)
+
+
+def _texto_plano(projeto: Projeto) -> str:
+    return (
+        f"Nova oportunidade de extensão no IC/UFRJ\n\n"
+        f"{projeto.titulo}\n\n"
+        f"{projeto.descricao_curta}\n\n"
+        f"Coordenador: {projeto.coordenador}\n"
+        + (f"Link: {projeto.link_inscricoes}\n" if projeto.link_inscricoes else "")
+        + "\nic.ufrj.br"
+    )
 
 
 def _render_template(projeto: Projeto, link_descadastro: str = "#") -> str:
@@ -103,15 +122,7 @@ class EmailNotificador:
         msg["To"] = destino
 
         # Versão texto plano (fallback)
-        texto = (
-            f"Nova oportunidade de extensão no IC/UFRJ\n\n"
-            f"{projeto.titulo}\n\n"
-            f"{projeto.descricao_curta}\n\n"
-            f"Coordenador: {projeto.coordenador}\n"
-            + (f"Link: {projeto.link_inscricoes}\n" if projeto.link_inscricoes else "")
-            + "\nic.ufrj.br"
-        )
-        msg.attach(MIMEText(texto, "plain", "utf-8"))
+        msg.attach(MIMEText(_texto_plano(projeto), "plain", "utf-8"))
 
         # Versão HTML
         html = _render_template(projeto)
@@ -186,9 +197,10 @@ class EmailNotificador:
         return resultados
 
     @classmethod
-    def from_env(cls) -> "EmailNotificador":
-        """Cria instância a partir de variáveis de ambiente."""
-        import os
+    def from_env(cls):
+        """Cria o notificador conforme EMAIL_BACKEND (smtp padrão | resend)."""
+        if os.environ.get("EMAIL_BACKEND", "smtp").lower() == "resend":
+            return ResendEmailNotificador.from_env()
         return cls(
             host=os.environ["EMAIL_HOST"],
             port=int(os.environ.get("EMAIL_PORT", "587")),
@@ -197,4 +209,82 @@ class EmailNotificador:
             from_addr=os.environ.get("EMAIL_FROM", os.environ["EMAIL_USER"]),
             use_tls=os.environ.get("EMAIL_USE_TLS", "true").lower() == "true",
             use_ssl=os.environ.get("EMAIL_USE_SSL", "false").lower() == "true",
+        )
+
+
+class ResendEmailNotificador:
+    """
+    Envia e-mail pela API HTTP da Resend (https://resend.com) — porta 443.
+    Mesma interface do EmailNotificador (enviar/enviar_detalhado/enviar_para_lista/
+    enviar_texto), para funcionar onde o SMTP de saída é bloqueado (ex.: Railway).
+
+    Env: RESEND_API_KEY (obrigatório), EMAIL_FROM (remetente; no plano grátis use
+    'onboarding@resend.dev' ou um domínio verificado).
+    """
+
+    API_URL = "https://api.resend.com/emails"
+
+    def __init__(self, api_key: str, from_addr: str):
+        self.api_key = api_key
+        self.from_addr = from_addr
+
+    def _post(self, payload: dict) -> tuple[bool, str]:
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            self.API_URL,
+            data=data,
+            method="POST",
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json",
+            },
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                resp.read()
+            return True, ""
+        except urllib.error.HTTPError as exc:
+            corpo = exc.read().decode("utf-8", "replace")
+            return False, f"HTTP {exc.code}: {corpo[:200]}"
+        except Exception as exc:
+            return False, str(exc)
+
+    def enviar_detalhado(self, destino: str, projeto: Projeto) -> tuple[bool, str]:
+        ok, erro = self._post({
+            "from": self.from_addr,
+            "to": [destino],
+            "subject": f"[IC/UFRJ Extensão] {projeto.titulo}",
+            "html": _render_template(projeto),
+            "text": _texto_plano(projeto),
+        })
+        if ok:
+            logger.info("E-mail (Resend) enviado para %s — %s", destino, projeto.titulo)
+        else:
+            logger.error("Erro Resend ao enviar para %s: %s", destino, erro)
+        return ok, erro
+
+    def enviar(self, destino: str, projeto: Projeto) -> bool:
+        return self.enviar_detalhado(destino, projeto)[0]
+
+    def enviar_para_lista(self, destinatarios: list[str], projeto: Projeto) -> dict[str, bool]:
+        return {dest: self.enviar(dest, projeto) for dest in destinatarios}
+
+    def enviar_texto(self, destino: str, assunto: str, corpo: str) -> bool:
+        ok, erro = self._post({
+            "from": self.from_addr,
+            "to": [destino],
+            "subject": assunto,
+            "text": corpo,
+        })
+        if ok:
+            logger.info("E-mail (Resend, texto) enviado para %s — %s", destino, assunto)
+        else:
+            logger.error("Erro Resend (texto) ao enviar para %s: %s", destino, erro)
+        return ok
+
+    @classmethod
+    def from_env(cls) -> "ResendEmailNotificador":
+        return cls(
+            api_key=os.environ["RESEND_API_KEY"],
+            from_addr=os.environ.get("EMAIL_FROM", "onboarding@resend.dev"),
         )

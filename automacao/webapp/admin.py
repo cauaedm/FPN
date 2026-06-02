@@ -23,7 +23,7 @@ from fastapi.templating import Jinja2Templates
 
 from db import storage
 from main import CANAIS, executar_ciclo
-from siga.client import buscar_acao_por, buscar_projetos_ic
+from siga.client import Projeto, buscar_acao_por, buscar_projetos_ic
 
 logger = logging.getLogger(__name__)
 
@@ -185,9 +185,35 @@ def _notificar_rejeicao(sub: dict, motivo: str):
 
 # ── Divulgação das extensões do IC (portal SIGA) ──────────────────────────────
 
+def _submissao_para_projeto(sub: dict) -> Projeto:
+    """Converte uma submissão externa aprovada em Projeto, para reusar os notificadores.
+    Usa id 'sub-<id>' para não colidir com os ids numéricos do SIGA no dedup."""
+    return Projeto(
+        id=f"sub-{sub['id']}",
+        titulo=sub["nome_extensao"],
+        coordenador=sub.get("coordenador_nome") or "",
+        unidade="Extensão externa",
+        modalidade="Extensão externa",
+        area="",
+        resumo=sub.get("descricao") or "",
+        descricao=sub.get("descricao") or "",
+        vagas=None,
+        data_inicio=None,
+        data_termino=None,
+        data_inicio_inscricoes=None,
+        data_termino_inscricoes=None,
+        como_inscrever=sub.get("processo_seletivo") or "",
+        link_inscricoes=sub.get("link_siga") or "",
+        contato=sub.get("contato") or "",
+        email_atendimento=sub.get("contato") or sub.get("coordenador_email") or "",
+        telefone="",
+        publico=sub.get("perfil_desejado") or "",
+    )
+
+
 @router.get("/divulgacao", response_class=HTMLResponse)
 def divulgacao(request: Request):
-    """Lista as extensões do IC vindas do portal SIGA com status de divulgação."""
+    """Lista extensões do IC (portal SIGA) + externas aprovadas, com status de divulgação."""
     itens = []
     erro = None
     try:
@@ -195,10 +221,19 @@ def divulgacao(request: Request):
             itens.append({
                 "projeto": p,
                 "status": {canal: storage.ja_notificado(p.id, canal) for canal in CANAIS},
+                "origem": "portal",
             })
     except Exception as exc:
         erro = str(exc)
         logger.error("Falha ao buscar SIGA para /admin/divulgacao: %s", exc)
+
+    for s in storage.listar_submissoes(status="aprovado"):
+        p = _submissao_para_projeto(s)
+        itens.append({
+            "projeto": p,
+            "status": {canal: storage.ja_notificado(p.id, canal) for canal in CANAIS},
+            "origem": "externa",
+        })
 
     return templates.TemplateResponse(
         request,
@@ -214,13 +249,17 @@ def divulgacao(request: Request):
 
 @router.post("/divulgacao/divulgar")
 def divulgar(request: Request, projeto_id: str = Form(...)):
-    """Dispara a divulgação de uma extensão do IC com retorno por canal."""
-    alvo = next(
-        (p for p in buscar_projetos_ic(incluir_encerrados=True) if p.id == projeto_id),
-        None,
-    )
+    """Dispara a divulgação de uma extensão (portal SIGA ou externa) com retorno por canal."""
+    if projeto_id.startswith("sub-"):
+        sub = storage.obter_submissao(int(projeto_id[4:]))
+        alvo = _submissao_para_projeto(sub) if sub else None
+    else:
+        alvo = next(
+            (p for p in buscar_projetos_ic(incluir_encerrados=True) if p.id == projeto_id),
+            None,
+        )
     if not alvo:
-        raise HTTPException(status_code=404, detail="Extensão não encontrada no portal")
+        raise HTTPException(status_code=404, detail="Extensão não encontrada")
     resultado = _divulgar_projeto(alvo)
     request.session["flash_divulgar"] = {"titulo": alvo.titulo, "resultado": resultado}
     return RedirectResponse(url="/admin/divulgacao", status_code=303)
