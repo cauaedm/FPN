@@ -81,7 +81,7 @@ router = APIRouter(prefix="/admin", dependencies=[Depends(exigir_login)])
 
 @router.get("", response_class=HTMLResponse)
 @router.get("/", response_class=HTMLResponse)
-def listar(request: Request, status: str | None = None):
+def listar(request: Request, status: str | None = None, msg: str | None = None):
     submissoes = storage.listar_submissoes(status=status or None)
     contagem = {
         "pendente": len(storage.listar_submissoes("pendente")),
@@ -92,7 +92,7 @@ def listar(request: Request, status: str | None = None):
     return templates.TemplateResponse(
         request,
         "admin_list.html",
-        {"submissoes": submissoes, "filtro": status, "contagem": contagem},
+        {"submissoes": submissoes, "filtro": status, "contagem": contagem, "msg": msg},
     )
 
 
@@ -134,6 +134,21 @@ def decidir(sid: int, acao: str = Form(...), motivo: str = Form("")):
         raise HTTPException(status_code=400, detail="Ação inválida")
 
     return RedirectResponse(url=f"/admin/submissao/{sid}", status_code=303)
+
+
+@router.post("/submissao/{sid}/excluir")
+def excluir_submissao(sid: int):
+    storage.excluir_submissao(sid)
+    return RedirectResponse(url="/admin?msg=Submissao+excluida", status_code=303)
+
+
+@router.post("/submissoes/resetar")
+def resetar_submissoes():
+    storage.resetar_submissoes_externas()
+    return RedirectResponse(
+        url="/admin?msg=Submissoes+resetadas+(pendentes+e+nao+divulgadas)",
+        status_code=303,
+    )
 
 
 def _email_coordenador(sub: dict, acao: str):

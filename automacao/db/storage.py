@@ -192,6 +192,29 @@ def obter_submissao(submissao_id: int) -> dict | None:
     return dict(row) if row else None
 
 
+def excluir_submissao(submissao_id: int):
+    """Remove uma submissão e a marca de divulgação dela ('sub-<id>')."""
+    with _connect() as conn:
+        conn.execute("DELETE FROM submissoes WHERE id=?", (submissao_id,))
+        conn.execute(
+            "DELETE FROM projetos_notificados WHERE projeto_id=?",
+            (f"sub-{submissao_id}",),
+        )
+    logger.info("Submissão #%s excluída.", submissao_id)
+
+
+def resetar_submissoes_externas():
+    """Volta todas as submissões para 'pendente' e limpa a divulgação das externas."""
+    with _connect() as conn:
+        conn.execute(
+            """UPDATE submissoes
+               SET status='pendente', verificado_siga=0,
+                   motivo_rejeicao=NULL, decidido_em=NULL"""
+        )
+        conn.execute("DELETE FROM projetos_notificados WHERE projeto_id LIKE 'sub-%'")
+    logger.info("Submissões externas resetadas (pendentes + não divulgadas).")
+
+
 def decidir_submissao(
     submissao_id: int,
     status: str,

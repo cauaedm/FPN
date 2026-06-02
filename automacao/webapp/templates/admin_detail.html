@@ -55,4 +55,12 @@
   </form>
   {% if s.motivo_rejeicao %}<p class="muted">Motivo registrado: {{ s.motivo_rejeicao }}</p>{% endif %}
 </div>
+
+<div class="card">
+  <h3>Manutenção</h3>
+  <form method="post" action="/admin/submissao/{{ s.id }}/excluir"
+        onsubmit="return confirm('Excluir definitivamente esta submissão?');">
+    <button class="danger" type="submit">Excluir submissão</button>
+  </form>
+</div>
 {% endblock %}
