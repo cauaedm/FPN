@@ -22,8 +22,8 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from db import storage
-from main import executar_ciclo
-from siga.client import buscar_acao_por
+from main import CANAIS, executar_ciclo, processar_projeto
+from siga.client import buscar_acao_por, buscar_projetos_ic
 
 logger = logging.getLogger(__name__)
 
@@ -157,6 +157,43 @@ def _notificar_rejeicao(sub: dict, motivo: str):
         f"Atenciosamente,\nComitê de Extensão — IC/UFRJ"
     )
     notif.enviar_texto(destino, "[IC/UFRJ Extensão] Sua solicitação não foi aprovada", corpo)
+
+
+# ── Divulgação das extensões do IC (portal SIGA) ──────────────────────────────
+
+@router.get("/divulgacao", response_class=HTMLResponse)
+def divulgacao(request: Request, msg: str | None = None):
+    """Lista as extensões do IC vindas do portal SIGA com status de divulgação."""
+    itens = []
+    erro = None
+    try:
+        for p in buscar_projetos_ic(incluir_encerrados=True):
+            itens.append({
+                "projeto": p,
+                "status": {canal: storage.ja_notificado(p.id, canal) for canal in CANAIS},
+            })
+    except Exception as exc:
+        erro = str(exc)
+        logger.error("Falha ao buscar SIGA para /admin/divulgacao: %s", exc)
+
+    return templates.TemplateResponse(
+        request,
+        "admin_divulgacao.html",
+        {"itens": itens, "erro": erro, "msg": msg, "canais": CANAIS},
+    )
+
+
+@router.post("/divulgacao/divulgar")
+def divulgar(projeto_id: str = Form(...)):
+    """Dispara a divulgação de uma extensão do IC nos canais ainda não notificados."""
+    alvo = next(
+        (p for p in buscar_projetos_ic(incluir_encerrados=True) if p.id == projeto_id),
+        None,
+    )
+    if not alvo:
+        raise HTTPException(status_code=404, detail="Extensão não encontrada no portal")
+    processar_projeto(alvo, CANAIS)
+    return RedirectResponse(url="/admin/divulgacao?msg=Divulgacao+disparada", status_code=303)
 
 
 # ── Interação com as automações + banco ───────────────────────────────────────

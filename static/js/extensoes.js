@@ -42,9 +42,12 @@
     var area = e.area ? '<span class="extensao-area">' + esc(e.area) + "</span>" : "";
     var tagOrigem = e.origem === "externa"
       ? '<span class="extensao-area" title="Extensão externa aprovada">externa</span>' : "";
+    var aviso = e.inscricoes_encerradas
+      ? '<p class="extensao-aviso">Inscrições encerradas</p>' : "";
 
-    return '<li><article class="card-extensao">' +
+    return '<li><article class="card-extensao' + (e.inscricoes_encerradas ? " card-extensao-concluido" : "") + '">' +
       '<header class="card-extensao-header"><h3>' + esc(e.titulo) + "</h3>" + area + tagOrigem + "</header>" +
+      aviso +
       (e.descricao ? '<p class="extensao-descricao">' + esc(e.descricao) + "</p>" : "") +
       '<dl class="extensao-metadados">' + meta + "</dl>" +
       perfil +

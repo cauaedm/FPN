@@ -106,10 +106,15 @@ def buscar_acao_por(link: str = None, email: str = None) -> Optional[dict]:
     return None
 
 
-def buscar_projetos_ic(apenas_com_vagas: bool = False) -> list[Projeto]:
+def buscar_projetos_ic(
+    apenas_com_vagas: bool = False, incluir_encerrados: bool = False
+) -> list[Projeto]:
     """
-    Busca todos os projetos ativos do IC na API do portal.extensao.ufrj.br.
-    Retorna lista de Projeto.
+    Busca os projetos do IC na API do portal.extensao.ufrj.br.
+
+    Por padrão filtra os com inscrição encerrada (usado pelo ciclo automático).
+    Com `incluir_encerrados=True` retorna todas as ações do IC, independente do
+    prazo — usado pelo site e pela listagem de divulgação do Comitê.
     """
     dados = _buscar_dados()
 
@@ -124,7 +129,7 @@ def buscar_projetos_ic(apenas_com_vagas: bool = False) -> list[Projeto]:
 
         # Filtra projetos encerrados (data_termino_inscricoes no passado)
         termino = acao.get("data_termino_inscricoes") or acao.get("data_termino") or ""
-        if termino and termino < hoje:
+        if not incluir_encerrados and termino and termino < hoje:
             continue
 
         # Obs.: a API do portal NÃO expõe número de vagas hoje — estas chaves

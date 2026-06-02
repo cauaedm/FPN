@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Divulgação · extensões do IC (portal SIGA)</h1>
+{% if msg %}<p class="msg">{{ msg }}</p>{% endif %}
+
+<p class="muted">
+  Extensões do Instituto de Computação retornadas pelo portal de extensão (todas, inclusive
+  com inscrição encerrada). Use <strong>Divulgar</strong> para disparar a notificação nos
+  canais ainda não enviados (e-mail/Telegram/WhatsApp). Canais já divulgados não são reenviados.
+</p>
+
+{% if erro %}
+  <p class="tag rejeitado">Não foi possível consultar o portal agora: {{ erro }}</p>
+{% elif itens %}
+<table>
+  <thead>
+    <tr>
+      <th>Extensão</th>
+      <th>Coordenador</th>
+      <th>Inscrições</th>
+      {% for c in canais %}<th>{{ c }}</th>{% endfor %}
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for it in itens %}
+    {% set p = it.projeto %}
+    <tr>
+      <td>
+        {{ p.titulo }}
+        {% if p.link_inscricoes %}<br><a href="{{ p.link_inscricoes }}" target="_blank" rel="noopener" class="muted">link SIGA →</a>{% endif %}
+      </td>
+      <td>{{ p.coordenador or "—" }}</td>
+      <td class="muted">{{ p.data_inicio_inscricoes or "?" }} → {{ p.data_termino_inscricoes or "?" }}</td>
+      {% for c in canais %}
+        <td>{% if it.status[c] %}<span class="tag aprovado">✓</span>{% else %}<span class="tag pendente">—</span>{% endif %}</td>
+      {% endfor %}
+      <td>
+        <form class="inline" method="post" action="/admin/divulgacao/divulgar">
+          <input type="hidden" name="projeto_id" value="{{ p.id }}">
+          <button type="submit">Divulgar</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Nenhuma extensão do IC encontrada no portal.</p>
+{% endif %}
+{% endblock %}

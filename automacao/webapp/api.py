@@ -5,6 +5,7 @@ Rotas públicas da API:
 """
 
 import logging
+from datetime import date
 
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
@@ -32,6 +33,8 @@ class SubmissaoIn(BaseModel):
 
 def _card_interno(p: Projeto) -> dict:
     ano_inicio = (p.data_inicio or "")[:4] or None
+    termino_insc = p.data_termino_inscricoes or ""
+    inscricoes_encerradas = bool(termino_insc and termino_insc < date.today().isoformat())
     return {
         "titulo": p.titulo,
         "coordenador": p.coordenador,
@@ -47,6 +50,7 @@ def _card_interno(p: Projeto) -> dict:
         "ano_inicio": ano_inicio,
         "ano_fim": None,
         "origem": "interna",
+        "inscricoes_encerradas": inscricoes_encerradas,
     }
 
 
@@ -74,7 +78,7 @@ def listar_extensoes() -> list[dict]:
     """Consolida extensões internas (SIGA-IC ativas) e externas aprovadas."""
     cards: list[dict] = []
     try:
-        for p in buscar_projetos_ic():
+        for p in buscar_projetos_ic(incluir_encerrados=True):
             cards.append(_card_interno(p))
     except Exception as exc:  # API do SIGA fora do ar não derruba o endpoint
         logger.error("Falha ao buscar SIGA para /api/extensoes: %s", exc)
