@@ -138,7 +138,7 @@ class EmailNotificador:
             logger.info("E-mail enviado para %s — %s", destino, projeto.titulo)
             return True
 
-        except smtplib.SMTPException as exc:
+        except Exception as exc:  # SMTP, conexão, DNS, TLS — não deixa quebrar o request
             logger.error("Erro ao enviar e-mail para %s: %s", destino, exc)
             return False
 
@@ -156,7 +156,7 @@ class EmailNotificador:
                     smtp.login(self.user, self.password)
                     smtp.sendmail(self.from_addr, destino, msg.as_string())
             return True
-        except smtplib.SMTPException as exc:
+        except Exception as exc:
             logger.error("Erro ao enviar e-mail para %s: %s", destino, exc)
             return False
 

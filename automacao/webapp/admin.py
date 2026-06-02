@@ -22,7 +22,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from db import storage
-from main import CANAIS, executar_ciclo, processar_projeto
+from main import CANAIS, executar_ciclo
 from siga.client import buscar_acao_por, buscar_projetos_ic
 
 logger = logging.getLogger(__name__)
@@ -126,6 +126,7 @@ def decidir(sid: int, acao: str = Form(...), motivo: str = Form("")):
         storage.decidir_submissao(sid, status="verificado", verificado_siga=True)
     elif acao == "aprovar":
         storage.decidir_submissao(sid, status="aprovado", verificado_siga=True)
+        _notificar_aprovacao(sub)
     elif acao == "rejeitar":
         storage.decidir_submissao(sid, status="rejeitado", motivo_rejeicao=motivo)
         _notificar_rejeicao(sub, motivo)
@@ -135,17 +136,40 @@ def decidir(sid: int, acao: str = Form(...), motivo: str = Form("")):
     return RedirectResponse(url=f"/admin/submissao/{sid}", status_code=303)
 
 
-def _notificar_rejeicao(sub: dict, motivo: str):
-    """RF09: avisa o coordenador sobre a rejeição (best-effort)."""
+def _email_coordenador(sub: dict, acao: str):
+    """Retorna (notificador, destino) ou (None, None) se não der p/ notificar."""
     destino = sub.get("coordenador_email")
     if not destino:
-        logger.warning("Submissão #%s sem e-mail do coordenador — sem notificação.", sub["id"])
-        return
+        logger.warning("Submissão #%s sem e-mail do coordenador — sem %s.", sub["id"], acao)
+        return None, None
     try:
         from notificadores.email_notificador import EmailNotificador
-        notif = EmailNotificador.from_env()
+        return EmailNotificador.from_env(), destino
     except Exception as exc:
-        logger.warning("E-mail não configurado — rejeição não notificada: %s", exc)
+        logger.warning("E-mail não configurado — %s não notificada: %s", acao, exc)
+        return None, None
+
+
+def _notificar_aprovacao(sub: dict):
+    """Avisa o coordenador que a extensão foi aprovada e será divulgada."""
+    notif, destino = _email_coordenador(sub, "aprovação")
+    if not notif:
+        return
+    corpo = (
+        f"Olá,\n\n"
+        f"Sua solicitação de divulgação da extensão \"{sub['nome_extensao']}\" "
+        f"foi APROVADA pelo Comitê de Extensão do IC/UFRJ.\n\n"
+        f"A extensão passará a ser divulgada aos alunos do Instituto de Computação "
+        f"e aparecerá no portal de extensões do IC.\n\n"
+        f"Atenciosamente,\nComitê de Extensão — IC/UFRJ"
+    )
+    notif.enviar_texto(destino, "[IC/UFRJ Extensão] Sua solicitação foi aprovada", corpo)
+
+
+def _notificar_rejeicao(sub: dict, motivo: str):
+    """RF09: avisa o coordenador sobre a rejeição (best-effort)."""
+    notif, destino = _email_coordenador(sub, "rejeição")
+    if not notif:
         return
 
     corpo = (
@@ -162,7 +186,7 @@ def _notificar_rejeicao(sub: dict, motivo: str):
 # ── Divulgação das extensões do IC (portal SIGA) ──────────────────────────────
 
 @router.get("/divulgacao", response_class=HTMLResponse)
-def divulgacao(request: Request, msg: str | None = None):
+def divulgacao(request: Request):
     """Lista as extensões do IC vindas do portal SIGA com status de divulgação."""
     itens = []
     erro = None
@@ -179,21 +203,107 @@ def divulgacao(request: Request, msg: str | None = None):
     return templates.TemplateResponse(
         request,
         "admin_divulgacao.html",
-        {"itens": itens, "erro": erro, "msg": msg, "canais": CANAIS},
+        {
+            "itens": itens,
+            "erro": erro,
+            "canais": CANAIS,
+            "flash": request.session.pop("flash_divulgar", None),
+        },
     )
 
 
 @router.post("/divulgacao/divulgar")
-def divulgar(projeto_id: str = Form(...)):
-    """Dispara a divulgação de uma extensão do IC nos canais ainda não notificados."""
+def divulgar(request: Request, projeto_id: str = Form(...)):
+    """Dispara a divulgação de uma extensão do IC com retorno por canal."""
     alvo = next(
         (p for p in buscar_projetos_ic(incluir_encerrados=True) if p.id == projeto_id),
         None,
     )
     if not alvo:
         raise HTTPException(status_code=404, detail="Extensão não encontrada no portal")
-    processar_projeto(alvo, CANAIS)
-    return RedirectResponse(url="/admin/divulgacao?msg=Divulgacao+disparada", status_code=303)
+    resultado = _divulgar_projeto(alvo)
+    request.session["flash_divulgar"] = {"titulo": alvo.titulo, "resultado": resultado}
+    return RedirectResponse(url="/admin/divulgacao", status_code=303)
+
+
+def _divulgar_projeto(p) -> dict:
+    """Envia a divulgação por canal e devolve {canal: mensagem} explicando o resultado.
+    Só envia em canais ainda não notificados (dedup) e registra cada tentativa."""
+    from notificadores.email_notificador import EmailNotificador
+    from notificadores.telegram_notificador import TelegramNotificador
+    from notificadores.whatsapp_notificador import WhatsAppNotificador
+
+    res: dict[str, str] = {}
+
+    # E-mail (destinatários da tabela assinantes)
+    if storage.ja_notificado(p.id, "email"):
+        res["email"] = "já divulgado"
+    else:
+        try:
+            notif = EmailNotificador.from_env()
+        except KeyError as e:
+            res["email"] = f"não configurado (falta {e})"
+        else:
+            dest = storage.listar_assinantes("email")
+            if not dest:
+                res["email"] = "nenhum assinante cadastrado"
+            else:
+                r = notif.enviar_para_lista(dest, p)
+                for d, ok in r.items():
+                    storage.registrar_envio(p.id, "email", d, ok)
+                enviados = sum(1 for ok in r.values() if ok)
+                if enviados == len(r):
+                    storage.marcar_notificado(p.id, "email")
+                    res["email"] = f"enviado p/ {enviados} assinante(s)"
+                elif enviados:
+                    res["email"] = f"parcial: {enviados}/{len(r)} (ver logs)"
+                else:
+                    res["email"] = "falha no envio (ver logs)"
+
+    # Telegram (chat_ids da env)
+    if storage.ja_notificado(p.id, "telegram"):
+        res["telegram"] = "já divulgado"
+    else:
+        try:
+            notif = TelegramNotificador.from_env()
+        except KeyError as e:
+            res["telegram"] = f"não configurado (falta {e})"
+        else:
+            if not notif.chat_ids:
+                res["telegram"] = "nenhum chat_id configurado"
+            else:
+                r = notif.enviar_para_todos(p)
+                for cid, ok in r.items():
+                    storage.registrar_envio(p.id, "telegram", cid, ok)
+                if all(r.values()):
+                    storage.marcar_notificado(p.id, "telegram")
+                    res["telegram"] = f"enviado p/ {len(r)} chat(s)"
+                else:
+                    res["telegram"] = "falha (ver logs)"
+
+    # WhatsApp (números da env)
+    if storage.ja_notificado(p.id, "whatsapp"):
+        res["whatsapp"] = "já divulgado"
+    else:
+        try:
+            notif = WhatsAppNotificador.from_env()
+        except KeyError as e:
+            res["whatsapp"] = f"não configurado (falta {e})"
+        else:
+            if not notif.numeros:
+                res["whatsapp"] = "nenhum número configurado"
+            else:
+                r = notif.enviar_para_todos(p)
+                for num, ok in r.items():
+                    storage.registrar_envio(p.id, "whatsapp", num, ok)
+                if all(r.values()):
+                    storage.marcar_notificado(p.id, "whatsapp")
+                    res["whatsapp"] = f"enviado p/ {len(r)} número(s)"
+                else:
+                    res["whatsapp"] = "falha (ver logs)"
+
+    logger.info("Divulgação manual '%s': %s", p.titulo, res)
+    return res
 
 
 # ── Interação com as automações + banco ───────────────────────────────────────

@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Divulgação · extensões do IC (portal SIGA)</h1>
-{% if msg %}<p class="msg">{{ msg }}</p>{% endif %}
+{% if flash %}
+<div class="msg">
+  <strong>{{ flash.titulo }}</strong> — resultado do disparo:
+  <ul style="margin:6px 0 0;">
+    {% for canal, texto in flash.resultado.items() %}
+      <li><strong>{{ canal }}:</strong> {{ texto }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
 
 <p class="muted">
   Extensões do Instituto de Computação retornadas pelo portal de extensão (todas, inclusive
