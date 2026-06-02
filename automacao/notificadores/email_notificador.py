@@ -198,9 +198,12 @@ class EmailNotificador:
 
     @classmethod
     def from_env(cls):
-        """Cria o notificador conforme EMAIL_BACKEND (smtp padrão | resend)."""
-        if os.environ.get("EMAIL_BACKEND", "smtp").lower() == "resend":
+        """Cria o notificador conforme EMAIL_BACKEND (smtp padrão | resend | brevo)."""
+        backend = os.environ.get("EMAIL_BACKEND", "smtp").lower()
+        if backend == "resend":
             return ResendEmailNotificador.from_env()
+        if backend == "brevo":
+            return BrevoEmailNotificador.from_env()
         return cls(
             host=os.environ["EMAIL_HOST"],
             port=int(os.environ.get("EMAIL_PORT", "587")),
@@ -287,4 +290,85 @@ class ResendEmailNotificador:
         return cls(
             api_key=os.environ["RESEND_API_KEY"],
             from_addr=os.environ.get("EMAIL_FROM", "onboarding@resend.dev"),
+        )
+
+
+class BrevoEmailNotificador:
+    """
+    Envia e-mail pela API HTTP da Brevo (https://brevo.com) — porta 443.
+    Mesma interface do EmailNotificador. Permite enviar para QUALQUER destinatário
+    (ex.: @ic.ufrj.br) com apenas um remetente verificado — sem precisar de domínio
+    próprio. Ideal no Railway (SMTP bloqueado).
+
+    Env: BREVO_API_KEY (obrigatório), EMAIL_FROM (remetente verificado na Brevo),
+    EMAIL_FROM_NAME (opcional, nome de exibição).
+    """
+
+    API_URL = "https://api.brevo.com/v3/smtp/email"
+
+    def __init__(self, api_key: str, from_addr: str, from_name: str = "IC/UFRJ Extensões"):
+        self.api_key = api_key
+        self.from_addr = from_addr
+        self.from_name = from_name
+
+    def _post(self, payload: dict) -> tuple[bool, str]:
+        payload = {"sender": {"email": self.from_addr, "name": self.from_name}, **payload}
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            self.API_URL,
+            data=data,
+            method="POST",
+            headers={
+                "api-key": self.api_key,
+                "Content-Type": "application/json",
+                "accept": "application/json",
+            },
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                resp.read()
+            return True, ""
+        except urllib.error.HTTPError as exc:
+            corpo = exc.read().decode("utf-8", "replace")
+            return False, f"HTTP {exc.code}: {corpo[:200]}"
+        except Exception as exc:
+            return False, str(exc)
+
+    def enviar_detalhado(self, destino: str, projeto: Projeto) -> tuple[bool, str]:
+        ok, erro = self._post({
+            "to": [{"email": destino}],
+            "subject": f"[IC/UFRJ Extensão] {projeto.titulo}",
+            "htmlContent": _render_template(projeto),
+            "textContent": _texto_plano(projeto),
+        })
+        if ok:
+            logger.info("E-mail (Brevo) enviado para %s — %s", destino, projeto.titulo)
+        else:
+            logger.error("Erro Brevo ao enviar para %s: %s", destino, erro)
+        return ok, erro
+
+    def enviar(self, destino: str, projeto: Projeto) -> bool:
+        return self.enviar_detalhado(destino, projeto)[0]
+
+    def enviar_para_lista(self, destinatarios: list[str], projeto: Projeto) -> dict[str, bool]:
+        return {dest: self.enviar(dest, projeto) for dest in destinatarios}
+
+    def enviar_texto(self, destino: str, assunto: str, corpo: str) -> bool:
+        ok, erro = self._post({
+            "to": [{"email": destino}],
+            "subject": assunto,
+            "textContent": corpo,
+        })
+        if ok:
+            logger.info("E-mail (Brevo, texto) enviado para %s — %s", destino, assunto)
+        else:
+            logger.error("Erro Brevo (texto) ao enviar para %s: %s", destino, erro)
+        return ok
+
+    @classmethod
+    def from_env(cls) -> "BrevoEmailNotificador":
+        return cls(
+            api_key=os.environ["BREVO_API_KEY"],
+            from_addr=os.environ["EMAIL_FROM"],
+            from_name=os.environ.get("EMAIL_FROM_NAME", "IC/UFRJ Extensões"),
         )
