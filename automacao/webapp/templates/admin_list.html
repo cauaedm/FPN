@@ -33,11 +33,4 @@
 {% else %}
 <p>Nenhuma submissão{% if filtro %} com status "{{ filtro }}"{% endif %}.</p>
 {% endif %}
-
-<hr style="margin:28px 0;border:0;border-top:1px solid var(--borda);">
-<h3>Manutenção</h3>
-<form method="post" action="/admin/submissoes/resetar"
-      onsubmit="return confirm('Voltar TODAS as submissões para pendente e marcar como não divulgadas?');">
-  <button type="submit" class="danger">Resetar externas (pendentes + não divulgadas)</button>
-</form>
 {% endblock %}
