@@ -17,10 +17,13 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
+from starlette.middleware.sessions import SessionMiddleware
 
 from db import storage
 from main import executar_ciclo
 from scheduler import DEFAULT_CRON
+from webapp.admin import NaoAutenticado, auth_router
 from webapp.admin import router as admin_router
 from webapp.api import router as api_router
 
@@ -73,6 +76,16 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Portal de Extensões IC/UFRJ", lifespan=lifespan)
 
+# Sessão do painel do Comitê (cookie assinado). SECRET_KEY dedicada se existir,
+# senão deriva da senha do Comitê (fallback só p/ não quebrar em dev).
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=os.environ.get("SECRET_KEY") or os.environ.get("COMITE_PASSWORD") or "dev-secret",
+    same_site="lax",
+    # Em produção (Railway = HTTPS) mantenha true; em dev local (HTTP) use COOKIE_SECURE=false.
+    https_only=os.environ.get("COOKIE_SECURE", "true").lower() == "true",
+)
+
 # CORS: permite o site (GitHub Pages) consumir a API em runtime.
 _origins = [o.strip() for o in os.environ.get("ALLOWED_ORIGIN", "*").split(",") if o.strip()]
 app.add_middleware(
@@ -82,7 +95,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.exception_handler(NaoAutenticado)
+async def _redirecionar_login(request, exc):
+    return RedirectResponse(url="/admin/login", status_code=303)
+
+
 app.include_router(api_router)
+app.include_router(auth_router)
 app.include_router(admin_router)
 
 

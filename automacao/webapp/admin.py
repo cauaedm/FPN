@@ -1,6 +1,9 @@
 """
-Painel do Comitê de Extensão (RF06-RF09), protegido por senha compartilhada.
+Painel do Comitê de Extensão (RF06-RF09), protegido por login com sessão.
 
+  GET  /admin/login                 → tela de login
+  POST /admin/login                 → autentica (COMITE_USER/COMITE_PASSWORD)
+  GET  /admin/logout                → encerra a sessão
   GET  /admin                       → lista submissões (filtro por status)
   GET  /admin/submissao/{id}        → detalhe + conferência no SIGA (RF06/RF07)
   POST /admin/submissao/{id}/decidir→ verificar | aprovar | rejeitar (RF08/RF09)
@@ -16,7 +19,6 @@ from pathlib import Path
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.templating import Jinja2Templates
 
 from db import storage
@@ -25,25 +27,56 @@ from siga.client import buscar_acao_por
 
 logger = logging.getLogger(__name__)
 
-security = HTTPBasic()
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 
 
-def verificar_senha(credentials: HTTPBasicCredentials = Depends(security)) -> str:
-    senha = os.environ.get("COMITE_PASSWORD", "")
-    usuario = os.environ.get("COMITE_USER", "comite")
-    user_ok = secrets.compare_digest(credentials.username, usuario)
-    pass_ok = bool(senha) and secrets.compare_digest(credentials.password, senha)
-    if not (user_ok and pass_ok):
-        raise HTTPException(
-            status_code=401,
-            detail="Não autorizado",
-            headers={"WWW-Authenticate": "Basic"},
+class NaoAutenticado(Exception):
+    """Levantada quando a sessão não está autenticada (redireciona p/ login)."""
+
+
+def exigir_login(request: Request):
+    if not request.session.get("autenticado"):
+        raise NaoAutenticado()
+
+
+def _credenciais_ok(usuario: str, senha: str) -> bool:
+    esperado_user = os.environ.get("COMITE_USER", "comite")
+    esperado_senha = os.environ.get("COMITE_PASSWORD", "")
+    user_ok = secrets.compare_digest(usuario, esperado_user)
+    pass_ok = bool(esperado_senha) and secrets.compare_digest(senha, esperado_senha)
+    return user_ok and pass_ok
+
+
+# Rotas públicas de autenticação (sem o guard de login).
+auth_router = APIRouter(prefix="/admin")
+
+
+@auth_router.get("/login", response_class=HTMLResponse)
+def login_form(request: Request, erro: str | None = None):
+    if request.session.get("autenticado"):
+        return RedirectResponse(url="/admin", status_code=303)
+    return templates.TemplateResponse(request, "login.html", {"erro": erro})
+
+
+@auth_router.post("/login")
+def login(request: Request, usuario: str = Form(...), senha: str = Form(...)):
+    if not _credenciais_ok(usuario, senha):
+        return templates.TemplateResponse(
+            request, "login.html", {"erro": "Usuário ou senha inválidos."}, status_code=401
         )
-    return credentials.username
+    request.session["autenticado"] = True
+    request.session["usuario"] = usuario
+    return RedirectResponse(url="/admin", status_code=303)
 
 
-router = APIRouter(prefix="/admin", dependencies=[Depends(verificar_senha)])
+@auth_router.get("/logout")
+def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse(url="/admin/login", status_code=303)
+
+
+# Rotas protegidas: exigem sessão autenticada.
+router = APIRouter(prefix="/admin", dependencies=[Depends(exigir_login)])
 
 
 @router.get("", response_class=HTMLResponse)

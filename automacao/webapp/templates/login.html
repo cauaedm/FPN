@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar · Comitê de Extensão — IC/UFRJ</title>
+  <style>
+    :root { --ic1:#344563; --borda:#d6dae0; }
+    * { box-sizing:border-box; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+           margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+           background:#f4f6f9; color:#1a1a1a; }
+    .login { background:#fff; border:1px solid var(--borda); border-radius:12px;
+             padding:32px; width:100%; max-width:360px; box-shadow:0 6px 24px rgba(52,69,99,.08); }
+    .login h1 { font-size:18px; color:var(--ic1); margin:0 0 4px; }
+    .login p.sub { margin:0 0 22px; color:#667; font-size:13px; }
+    label { display:block; font-weight:600; color:var(--ic1); font-size:13px; margin-top:14px; }
+    input { width:100%; margin-top:5px; padding:10px 12px; border:1px solid var(--borda);
+            border-radius:8px; font-size:15px; }
+    button { width:100%; margin-top:22px; background:var(--ic1); color:#fff; border:0;
+             padding:11px; border-radius:8px; font-size:15px; cursor:pointer; }
+    .erro { background:#f8d7da; color:#842029; padding:10px 12px; border-radius:8px;
+            font-size:13px; margin-bottom:16px; }
+  </style>
+</head>
+<body>
+  <form class="login" method="post" action="/admin/login">
+    <h1>Comitê de Extensão</h1>
+    <p class="sub">Instituto de Computação · UFRJ</p>
+    {% if erro %}<div class="erro">{{ erro }}</div>{% endif %}
+    <label for="usuario">Usuário</label>
+    <input id="usuario" name="usuario" autocomplete="username" autofocus required>
+    <label for="senha">Senha</label>
+    <input id="senha" name="senha" type="password" autocomplete="current-password" required>
+    <button type="submit">Entrar</button>
+  </form>
+</body>
+</html>
