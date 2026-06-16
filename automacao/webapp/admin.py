@@ -1,12 +1,12 @@
 """
-Painel do Comitê de Extensão (RF06-RF09), protegido por login com sessão.
+Painel do Comitê de Extensão, protegido por login com sessão.
 
   GET  /admin/login                 → tela de login
   POST /admin/login                 → autentica (COMITE_USER/COMITE_PASSWORD)
   GET  /admin/logout                → encerra a sessão
   GET  /admin                       → lista submissões (filtro por status)
-  GET  /admin/submissao/{id}        → detalhe + conferência no SIGA (RF06/RF07)
-  POST /admin/submissao/{id}/decidir→ verificar | aprovar | rejeitar (RF08/RF09)
+  GET  /admin/submissao/{id}        → detalhe + conferência no SIGA
+  POST /admin/submissao/{id}/decidir→ verificar | aprovar | rejeitar
   GET  /admin/automacoes            → interação com as automações + banco
   POST /admin/automacoes/rodar-ciclo
   POST /admin/automacoes/assinante
@@ -102,7 +102,7 @@ def detalhe(request: Request, sid: int):
     if not sub:
         raise HTTPException(status_code=404, detail="Submissão não encontrada")
 
-    # Conferência manual no SIGA (RF06): tenta localizar a ação correspondente.
+    # Tenta localizar a ação correspondente no SIGA.
     siga = None
     try:
         siga = buscar_acao_por(link=sub.get("link_siga"), email=sub.get("coordenador_email"))
@@ -182,7 +182,7 @@ def _notificar_aprovacao(sub: dict):
 
 
 def _notificar_rejeicao(sub: dict, motivo: str):
-    """RF09: avisa o coordenador sobre a rejeição (best-effort)."""
+    """Avisa o coordenador sobre a rejeição (best-effort)."""
     notif, destino = _email_coordenador(sub, "rejeição")
     if not notif:
         return

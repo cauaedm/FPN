@@ -1,7 +1,7 @@
 """
 Rotas públicas da API:
-  - POST /api/submissoes  → recebe a submissão de extensão externa (RF05)
-  - GET  /api/extensoes   → lista consolidada (SIGA-IC + externas aprovadas) (RF11/RF12)
+  - POST /api/submissoes  → recebe a submissão de extensão externa
+  - GET  /api/extensoes   → lista consolidada (SIGA-IC + externas aprovadas)
 """
 
 import logging
