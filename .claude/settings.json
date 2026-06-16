@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(automacao/.venv/Scripts/python.exe -c ' *)",
+      "Bash(git commit *)",
+      "Bash(echo \"pushed: $?\")",
+      "Bash(HUGO_CANONIFYURLS=true hugo --quiet --gc --minify --baseURL \"https://cauaedm.github.io/FPN/\")"
+    ]
+  }
+}
