@@ -5,7 +5,7 @@
 
 <div class="grid">
   <div class="card">
-    <h3>Submissão (RF05)</h3>
+    <h3>Submissão</h3>
     <dl>
       <dt>Descrição</dt><dd>{{ s.descricao }}</dd>
       <dt>Perfil desejado</dt><dd>{{ s.perfil_desejado or "—" }}</dd>
@@ -18,7 +18,7 @@
   </div>
 
   <div class="card">
-    <h3>Conferência no SIGA (RF06/RF07)</h3>
+    <h3>Conferência no SIGA</h3>
     {% if siga %}
       <p style="color:#0f5132;"><strong>✔ Ação localizada no SIGA.</strong></p>
       <dl>
@@ -38,11 +38,7 @@
 </div>
 
 <div class="card">
-  <h3>Decisão do Comitê (RF08/RF09)</h3>
-  <form class="inline" method="post" action="/admin/submissao/{{ s.id }}/decidir">
-    <input type="hidden" name="acao" value="verificar">
-    <button type="submit">Marcar verificada</button>
-  </form>
+  <h3>Decisão do Comitê</h3>
   <form class="inline" method="post" action="/admin/submissao/{{ s.id }}/decidir">
     <input type="hidden" name="acao" value="aprovar">
     <button type="submit">Aprovar ✓</button>

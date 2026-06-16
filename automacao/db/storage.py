@@ -142,7 +142,7 @@ def listar_log_envios(limite: int = 100) -> list[dict]:
     return [dict(r) for r in rows]
 
 
-# ── Submissões de extensões externas (RF05-RF09) ──────────────────────────────
+# ── Submissões de extensões externas ─────────────────────────────────────────
 
 def criar_submissao(dados: dict) -> int:
     """Cria uma submissão com status 'pendente'. Retorna o id gerado."""

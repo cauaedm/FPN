@@ -7,7 +7,7 @@ python-dotenv>=1.0.0
 # Agendador de tarefas
 APScheduler>=3.10.4
 
-# Web service: formulário (RF05), API consolidada (RF11/12) e painel do Comitê
+# Web service: formulário, API consolidada e painel do Comitê
 fastapi>=0.110.0
 uvicorn[standard]>=0.29.0
 jinja2>=3.1.4
@@ -16,8 +16,5 @@ itsdangerous>=2.1.2  # sessão (SessionMiddleware) do painel do Comitê
 
 # (Opcional) Twilio para WhatsApp — descomente se usar backend Twilio
 # twilio>=9.0.0
-
-# (Opcional) Jinja2 para templates mais avançados — descomente se quiser
-# Jinja2>=3.1.4
 
 # Todas as outras dependências (urllib, smtplib, sqlite3, json) são da stdlib Python 3.10+

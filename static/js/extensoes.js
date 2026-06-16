@@ -1,4 +1,4 @@
-/* Listagem dinâmica de extensões (RF11/RF12/RF14).
+/* Listagem dinâmica de extensões.
    Busca a lista consolidada da API (SIGA-IC + externas aprovadas) e renderiza
    os cards com busca e filtros client-side. */
 (function () {
