@@ -257,7 +257,6 @@ def divulgacao(request: Request):
             "itens": itens,
             "erro": erro,
             "canais": CANAIS,
-            "flash": request.session.pop("flash_divulgar", None),
         },
     )
 
@@ -275,8 +274,7 @@ def divulgar(request: Request, projeto_id: str = Form(...)):
         )
     if not alvo:
         raise HTTPException(status_code=404, detail="Extensão não encontrada")
-    resultado = _divulgar_projeto(alvo)
-    request.session["flash_divulgar"] = {"titulo": alvo.titulo, "resultado": resultado}
+    _divulgar_projeto(alvo)
     return RedirectResponse(url="/admin/divulgacao", status_code=303)
 
 
@@ -285,7 +283,6 @@ def _divulgar_projeto(p) -> dict:
     Só envia em canais ainda não notificados (dedup) e registra cada tentativa."""
     from notificadores.email_notificador import EmailNotificador
     from notificadores.telegram_notificador import TelegramNotificador
-    from notificadores.whatsapp_notificador import WhatsAppNotificador
 
     res: dict[str, str] = {}
 
@@ -339,27 +336,6 @@ def _divulgar_projeto(p) -> dict:
                     res["telegram"] = f"enviado p/ {len(r)} chat(s)"
                 else:
                     res["telegram"] = "falha (ver logs)"
-
-    # WhatsApp (números da env)
-    if storage.ja_notificado(p.id, "whatsapp"):
-        res["whatsapp"] = "já divulgado"
-    else:
-        try:
-            notif = WhatsAppNotificador.from_env()
-        except KeyError as e:
-            res["whatsapp"] = f"não configurado (falta {e})"
-        else:
-            if not notif.numeros:
-                res["whatsapp"] = "nenhum número configurado"
-            else:
-                r = notif.enviar_para_todos(p)
-                for num, ok in r.items():
-                    storage.registrar_envio(p.id, "whatsapp", num, ok)
-                if all(r.values()):
-                    storage.marcar_notificado(p.id, "whatsapp")
-                    res["whatsapp"] = f"enviado p/ {len(r)} número(s)"
-                else:
-                    res["whatsapp"] = "falha (ver logs)"
 
     logger.info("Divulgação manual '%s': %s", p.titulo, res)
     return res

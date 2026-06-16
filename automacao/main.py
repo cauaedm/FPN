@@ -35,10 +35,9 @@ from siga.client import buscar_projetos_ic, Projeto
 from db import storage
 from notificadores.email_notificador import EmailNotificador
 from notificadores.telegram_notificador import TelegramNotificador
-from notificadores.whatsapp_notificador import WhatsAppNotificador
 
 
-CANAIS = ["email", "telegram", "whatsapp"]
+CANAIS = ["email", "telegram"]
 
 
 def _notificador_email() -> EmailNotificador | None:
@@ -54,14 +53,6 @@ def _notificador_telegram() -> TelegramNotificador | None:
         return TelegramNotificador.from_env()
     except KeyError as e:
         logger.warning("Telegram não configurado (falta %s) — ignorando canal.", e)
-        return None
-
-
-def _notificador_whatsapp() -> WhatsAppNotificador | None:
-    try:
-        return WhatsAppNotificador.from_env()
-    except KeyError as e:
-        logger.warning("WhatsApp não configurado (falta %s) — ignorando canal.", e)
         return None
 
 
@@ -97,20 +88,6 @@ def processar_projeto(projeto: Projeto, canais: list[str]):
                     storage.marcar_notificado(projeto.id, "telegram")
         else:
             logger.debug("Projeto %s já notificado via Telegram.", projeto.id)
-
-    if "whatsapp" in canais:
-        if not storage.ja_notificado(projeto.id, "whatsapp"):
-            notif = _notificador_whatsapp()
-            if notif and notif.numeros:
-                resultados = notif.enviar_para_todos(projeto)
-                sucesso = all(resultados.values())
-                for numero, ok in resultados.items():
-                    storage.registrar_envio(projeto.id, "whatsapp", numero, ok)
-                if sucesso:
-                    storage.marcar_notificado(projeto.id, "whatsapp")
-        else:
-            logger.debug("Projeto %s já notificado via WhatsApp.", projeto.id)
-
 
 def executar_ciclo(canais: list[str] = None):
     """
@@ -226,11 +203,6 @@ def cmd_testar(canal: str = None):
     if "telegram" in canais:
         notif = _notificador_telegram()
         if notif and notif.chat_ids:
-            notif.enviar_para_todos(projeto)
-
-    if "whatsapp" in canais:
-        notif = _notificador_whatsapp()
-        if notif and notif.numeros:
             notif.enviar_para_todos(projeto)
 
     print("Teste concluído.")

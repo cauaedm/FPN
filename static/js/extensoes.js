@@ -36,6 +36,8 @@
 
     var rodape = "";
     if (e.contato) rodape += '<span>Contato: <a href="mailto:' + esc(e.contato) + '">' + esc(e.contato) + "</a></span>";
+    if (e.id_acao) rodape += '<a href="https://portal.ufrj.br/Inscricao/extensao/acaoExtensao/acao?id=' +
+      esc(e.id_acao) + '" target="_blank" rel="noopener">Saiba mais →</a>';
     if (e.link_inscricao) rodape += '<a href="' + esc(e.link_inscricao) +
       '" target="_blank" rel="noopener">Inscrever-se →</a>';
 

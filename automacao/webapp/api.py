@@ -51,6 +51,7 @@ def _card_interno(p: Projeto) -> dict:
         "ano_fim": None,
         "origem": "interna",
         "inscricoes_encerradas": inscricoes_encerradas,
+        "id_acao": p.id or None,
     }
 
 
